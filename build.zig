@@ -14,9 +14,9 @@ pub fn build(b: *std.build.Builder) void {
 
     const exe = b.addExecutable("wgpu", "src/main.zig");
 
-    exe.addIncludeDir("libs");
     exe.addPackagePath("glfw", "libs/mach-glfw/src/main.zig");
-    exe.linkSystemLibrary("kernel32");
+    exe.addIncludeDir("libs");
+    // exe.linkSystemLibrary("kernel32");
     glfw.link(b, exe, .{});
 
     exe.setTarget(target);

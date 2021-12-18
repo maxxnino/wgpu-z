@@ -1,38 +1,37 @@
 const std = @import("std");
 const glfw = @import("glfw");
 const kn = std.os.windows.kernel32;
-const c = @cImport({
-    @cInclude("wgpu.h");
-});
+const wb = @import("wgpu_binding.zig");
+const triangle_shader = @embedFile("shader/triangle.wgsl");
 const DynLib = std.DynLib;
+const loadAllFromDynLib = @import("wgpu.zig").loadAllFromDynLib;
 
-//
-fn requestAdapterCallback(status: c.WGPURequestAdapterStatus, received: c.WGPUAdapter, message: [*c]const u8, userdata: ?*c_void) callconv(.C) void {
+fn requestAdapterCallback(
+    status: wb.WGPURequestAdapterStatus,
+    received: wb.WGPUAdapter,
+    message: [*:0]const u8,
+    userdata: *c_void,
+) callconv(.C) void {
     _ = status;
     _ = message;
-    @ptrCast(*c.WGPUAdapter, @alignCast(@alignOf(c.WGPUAdapter), userdata.?)).* = received;
+    @ptrCast(*wb.WGPUAdapter, @alignCast(@alignOf(wb.WGPUAdapter), userdata)).* = received;
 }
 
-//binding
-var wgpuInstanceCreateSurface: fn (c.WGPUInstance, *const c.WGPUSurfaceDescriptor) c.WGPUSurface = undefined;
-var wgpuInstanceRequestAdapter: fn (
-    c.WGPUInstance,
-    *const c.WGPURequestAdapterOptions,
-    c.WGPURequestAdapterCallback,
-    *c_void,
-) void = undefined;
-
+fn requestDeviceCallback(
+    status: wb.WGPURequestDeviceStatus,
+    received: wb.WGPUDevice,
+    message: [*:0]const u8,
+    userdata: *c_void,
+) callconv(.C) void {
+    _ = status;
+    _ = message;
+    @ptrCast(*wb.WGPUDevice, @alignCast(@alignOf(wb.WGPUDevice), userdata)).* = received;
+}
 pub fn main() anyerror!void {
-    var wgpu = try DynLib.open("libs/libwgpu.dll");
+    var lib = try DynLib.open("libs/libwgpu.dll");
+    defer lib.close();
     // dynamic load fn pointer
-    wgpuInstanceCreateSurface = wgpu.lookup(
-        @TypeOf(wgpuInstanceCreateSurface),
-        "wgpuInstanceCreateSurface",
-    ) orelse unreachable;
-    wgpuInstanceRequestAdapter = wgpu.lookup(
-        @TypeOf(wgpuInstanceRequestAdapter),
-        "wgpuInstanceRequestAdapter",
-    ) orelse unreachable;
+    const wgpu = try loadAllFromDynLib(&lib);
 
     try glfw.init(.{});
     defer glfw.terminate();
@@ -44,25 +43,53 @@ pub fn main() anyerror!void {
     });
     var hwnd = glfw.c.glfwGetWin32Window(window.handle);
     var hinstance = kn.GetModuleHandleW(null);
-    const surface = wgpuInstanceCreateSurface(null, &.{
+    const surface = wgpu.wgpuInstanceCreateSurface(.null_handle, &.{
         .label = null,
-        .nextInChain = @ptrCast(*const c.WGPUChainedStruct, &c.WGPUSurfaceDescriptorFromWindowsHWND{
+        .nextInChain = wb.toChainedStruct(&wb.WGPUSurfaceDescriptorFromWindowsHWND{
             .chain = .{
                 .next = null,
-                .sType = c.WGPUSType_SurfaceDescriptorFromWindowsHWND,
+                .sType = .SurfaceDescriptorFromWindowsHWND,
             },
             .hinstance = hinstance,
             .hwnd = hwnd,
         }),
     });
-    var adapter: c.WGPUAdapter = undefined;
-    wgpuInstanceRequestAdapter(null, &.{
+    var adapter: wb.WGPUAdapter = undefined;
+    wgpu.wgpuInstanceRequestAdapter(.null_handle, &.{
         .nextInChain = null,
         .compatibleSurface = surface,
         .powerPreference = undefined,
         .forceFallbackAdapter = undefined,
     }, requestAdapterCallback, @ptrCast(*c_void, &adapter));
 
+    var device: wb.WGPUDevice = undefined;
+    wgpu.wgpuAdapterRequestDevice(adapter, &.{
+        .nextInChain = wb.toChainedStruct(
+            &wb.WGPUDeviceExtras{ .chain = .{
+                .next = null,
+                .sType = .DeviceExtras,
+            }, .nativeFeatures = undefined, .label = "Device", .tracePath = null },
+        ),
+        .requiredLimits = &wb.WGPURequiredLimits{
+            .nextInChain = null,
+            .limits = .{
+                .maxBindGroups = 1,
+            },
+        },
+        .requiredFeaturesCount = 0,
+        .requiredFeatures = undefined,
+    }, requestDeviceCallback, @ptrCast(*c_void, &device));
+    const wgsl_descriptor = wb.WGPUShaderModuleWGSLDescriptor{
+        .chain = .{
+            .next = null,
+            .sType = .ShaderModuleWGSLDescriptor,
+        },
+        .source = triangle_shader,
+    };
+    const shader = wgpu.wgpuDeviceCreateShaderModule(device, &.{
+        .nextInChain = wb.toChainedStruct(&wgsl_descriptor),
+        .label = null,
+    });
     while (!window.shouldClose()) {
         try glfw.pollEvents();
     }
