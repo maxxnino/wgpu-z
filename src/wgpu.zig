@@ -22,6 +22,12 @@ commandEncoderFinish: @TypeOf(Wgpu.wgpuCommandEncoderFinish),
 queueSubmit: @TypeOf(Wgpu.wgpuQueueSubmit),
 swapChainPresent: @TypeOf(Wgpu.wgpuSwapChainPresent),
 adapterGetProperties: @TypeOf(Wgpu.wgpuAdapterGetProperties),
+queueWriteBuffer: @TypeOf(Wgpu.wgpuQueueWriteBuffer),
+deviceCreateBuffer: @TypeOf(Wgpu.wgpuDeviceCreateBuffer),
+bufferDestroy: @TypeOf(Wgpu.wgpuBufferDestroy),
+renderPassEncoderSetVertexBuffer: @TypeOf(Wgpu.wgpuRenderPassEncoderSetVertexBuffer),
+renderPassEncoderSetIndexBuffer: @TypeOf(Wgpu.wgpuRenderPassEncoderSetIndexBuffer),
+renderPassEncoderDrawIndexed: @TypeOf(Wgpu.wgpuRenderPassEncoderDrawIndexed),
 
 fn symbol(comptime decl_name: []const u8) [:0]const u8 {
     const upper_char = [_]u8{comptime std.ascii.toUpper(decl_name[0])};

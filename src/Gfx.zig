@@ -8,6 +8,7 @@ const Gfx = @This();
 device: Wgpu.Device,
 surface: Wgpu.Surface,
 adapter: Wgpu.Adapter,
+queue: Wgpu.Queue,
 
 swapchain: Wgpu.SwapChain,
 frame_buffer: Wgpu.TextureView,
@@ -82,22 +83,23 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
         .presentMode = .Fifo,
     };
     gfx.swapchain = wb.deviceCreateSwapChain(gfx.device, gfx.surface, &gfx.swapchain_des);
+    gfx.queue = wb.deviceGetQueue(gfx.device);
 
     return gfx;
 }
 
-pub fn beginFrame(self: *Gfx) !void {
-    try self.aquireFrameBuffer();
-    self.encoder = self.wb.deviceCreateCommandEncoder(self.device, &.{ .label = "Command Encoder" });
-    self.render_pass = self.wb.commandEncoderBeginRenderPass(self.encoder, &.{
+pub fn beginFrame(gfx: *Gfx) !void {
+    try gfx.aquireFrameBuffer();
+    gfx.encoder = gfx.wb.deviceCreateCommandEncoder(gfx.device, &.{ .label = "Command Encoder" });
+    gfx.render_pass = gfx.wb.commandEncoderBeginRenderPass(gfx.encoder, &.{
         .colorAttachments = @ptrCast([*]const Wgpu.RenderPassColorAttachment, &Wgpu.RenderPassColorAttachment{
-            .view = self.frame_buffer,
+            .view = gfx.frame_buffer,
             .resolveTarget = .null_handle,
             .loadOp = .Clear,
             .storeOp = .Store,
             .clearColor = .{
                 .r = 0.0,
-                .g = 1.0,
+                .g = 0.0,
                 .b = 0.0,
                 .a = 1.0,
             },
@@ -106,25 +108,41 @@ pub fn beginFrame(self: *Gfx) !void {
         .depthStencilAttachment = null,
         .occlusionQuerySet = undefined,
     });
-    self.wb.renderPassEncoderSetPipeline(self.render_pass, self.pipeline);
+    gfx.wb.renderPassEncoderSetPipeline(gfx.render_pass, gfx.pipeline);
 }
 
-pub fn draw(self: Gfx) void {
-    self.wb.renderPassEncoderDraw(self.render_pass, 3, 1, 0, 0);
+pub fn draw(gfx: Gfx, vertex_buffer: Wgpu.Buffer, index_buffer: Wgpu.Buffer, indices_count: u32) void {
+    // gfx.wb.renderPassEncoderDraw(gfx.render_pass, 3, 1, 0, 0);
+
+    // Bind triangle vertex buffer (contains position and colors)
+    // wgpuRenderPassEncoderSetVertexBuffer(wgpu_context->rpass_enc, 0,
+    //                                      vertices.buffer, 0, WGPU_WHOLE_SIZE);
+    gfx.wb.renderPassEncoderSetVertexBuffer(gfx.render_pass, 0, vertex_buffer, 0, Wgpu.WHOLE_SIZE);
+
+    // Bind triangle index buffer
+    // wgpuRenderPassEncoderSetIndexBuffer(wgpu_context->rpass_enc, indices.buffer,
+    //                                     WGPUIndexFormat_Uint16, 0,
+    //                                     WGPU_WHOLE_SIZE);
+    gfx.wb.renderPassEncoderSetIndexBuffer(gfx.render_pass, index_buffer, .Uint16, 0, Wgpu.WHOLE_SIZE);
+
+    // Draw indexed triangle
+    // wgpuRenderPassEncoderDrawIndexed(wgpu_context->rpass_enc, indices.count, 1, 0,
+    //                                  0, 0);
+    gfx.wb.renderPassEncoderDrawIndexed(gfx.render_pass, indices_count, 1, 0, 0, 0);
 }
 
-pub fn endFrame(self: *Gfx) void {
-    self.wb.renderPassEncoderEndPass(self.render_pass);
-    const queue = self.wb.deviceGetQueue(self.device);
-    const cmd_buffer = self.wb.commandEncoderFinish(self.encoder, &.{ .label = null });
-    self.wb.queueSubmit(queue, 1, @ptrCast([*]const Wgpu.CommandBuffer, &cmd_buffer));
-    self.wb.swapChainPresent(self.swapchain);
-    self.render_pass = .null_handle;
-    self.encoder = .null_handle;
+pub fn endFrame(gfx: *Gfx) void {
+    gfx.wb.renderPassEncoderEndPass(gfx.render_pass);
+    const cmd_buffer = gfx.wb.commandEncoderFinish(gfx.encoder, &.{ .label = null });
+    gfx.wb.queueSubmit(gfx.queue, 1, @ptrCast([*]const Wgpu.CommandBuffer, &cmd_buffer));
+    gfx.wb.swapChainPresent(gfx.swapchain);
+    gfx.render_pass = .null_handle;
+    gfx.encoder = .null_handle;
 }
 
-pub fn createPipeline(self: *Gfx) void {
-    const shader = self.wb.deviceCreateShaderModule(self.device, &.{
+/// Note: remeber change this with buffer layout
+pub fn createPipeline(gfx: *Gfx, vertex_layout: *const Wgpu.VertexBufferLayout) void {
+    const shader = gfx.wb.deviceCreateShaderModule(gfx.device, &.{
         .nextInChain = Wgpu.toChainedStruct(&Wgpu.ShaderModuleWGSLDescriptor{
             .chain = .{
                 .next = null,
@@ -134,21 +152,22 @@ pub fn createPipeline(self: *Gfx) void {
         }),
         .label = null,
     });
-    const piptline_layout = self.wb.deviceCreatePipelineLayout(self.device, &.{
+    const piptline_layout = gfx.wb.deviceCreatePipelineLayout(gfx.device, &.{
         .bindGroupLayoutCount = 0,
         .bindGroupLayouts = null,
     });
 
-    self.pipeline = self.wb.deviceCreateRenderPipeline(self.device, &(Wgpu.RenderPipelineDescriptor){
+    gfx.pipeline = gfx.wb.deviceCreateRenderPipeline(gfx.device, &(Wgpu.RenderPipelineDescriptor){
         .label = "Render pipeline",
         .layout = piptline_layout,
         .vertex = .{
             .module = shader,
-            .entryPoint = "vs_main",
+            .entryPoint = "vertex_main",
             .constantCount = 0,
             .constants = undefined,
-            .bufferCount = 0,
-            .buffers = undefined,
+            // Note: remeber change this with buffer layout
+            .bufferCount = 1,
+            .buffers = @ptrCast([*]const Wgpu.VertexBufferLayout, vertex_layout),
         },
         .primitive = .{
             .topology = .TriangleList,
@@ -163,10 +182,10 @@ pub fn createPipeline(self: *Gfx) void {
         },
         .fragment = &.{
             .module = shader,
-            .entryPoint = "fs_main",
+            .entryPoint = "fragment_main",
             .targetCount = 1,
             .targets = @ptrCast([*]const Wgpu.ColorTargetState, &Wgpu.ColorTargetState{
-                .format = self.swapchain_des.format,
+                .format = gfx.swapchain_des.format,
                 .blend = &.{
                     .color = .{ .srcFactor = .One, .dstFactor = .Zero, .operation = .Add },
                     .alpha = .{ .srcFactor = .One, .dstFactor = .Zero, .operation = .Add },
@@ -180,20 +199,35 @@ pub fn createPipeline(self: *Gfx) void {
     });
 }
 
-pub fn aquireFrameBuffer(self: *Gfx) !void {
-    const size = try self.window.getSize();
-    if (self.swapchain_des.width != size.width or self.swapchain_des.height != size.height) {
-        self.recreateSwapChain(size.width, size.height, .Fifo);
+pub fn aquireFrameBuffer(gfx: *Gfx) !void {
+    const size = try gfx.window.getSize();
+    if (gfx.swapchain_des.width != size.width or gfx.swapchain_des.height != size.height) {
+        gfx.recreateSwapChain(size.width, size.height, .Fifo);
     }
-    self.frame_buffer = self.wb.swapChainGetCurrentTextureView(self.swapchain);
-    if (self.frame_buffer == .null_handle) return error.CannotAquireNextImage;
+    gfx.frame_buffer = gfx.wb.swapChainGetCurrentTextureView(gfx.swapchain);
+    if (gfx.frame_buffer == .null_handle) return error.CannotAquireNextImage;
 }
 
-pub fn recreateSwapChain(self: *Gfx, width: u32, height: u32, present_mode: Wgpu.PresentMode) void {
-    self.swapchain_des.width = width;
-    self.swapchain_des.height = height;
-    self.swapchain_des.presentMode = present_mode;
-    self.swapchain = self.wb.deviceCreateSwapChain(self.device, self.surface, &self.swapchain_des);
+pub fn recreateSwapChain(gfx: *Gfx, width: u32, height: u32, present_mode: Wgpu.PresentMode) void {
+    gfx.swapchain_des.width = width;
+    gfx.swapchain_des.height = height;
+    gfx.swapchain_des.presentMode = present_mode;
+    gfx.swapchain = gfx.wb.deviceCreateSwapChain(gfx.device, gfx.surface, &gfx.swapchain_des);
+}
+
+pub fn createBufferFromData(gfx: Gfx, data: anytype, usage: Wgpu.BufferUsage, size: usize) Wgpu.Buffer {
+    const usage_flag = usage.merge(.{ .CopyDst = true });
+    const buffer = gfx.wb.deviceCreateBuffer(gfx.device, &.{
+        .usage = usage_flag,
+        .size = size,
+        .mappedAtCreation = false,
+    });
+    gfx.queueWriteBuffer(buffer, 0, data, size);
+    return buffer;
+}
+
+pub fn queueWriteBuffer(gfx: Gfx, buffer: Wgpu.Buffer, offset: usize, data: anytype, size: usize) void {
+    gfx.wb.queueWriteBuffer(gfx.queue, buffer, offset, @ptrCast(*const c_void, data), size);
 }
 
 fn requestAdapterCallback(
