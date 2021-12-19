@@ -431,20 +431,44 @@ pub const VertexStepMode = enum(i32) {
     Instance = 1,
     _,
 };
-pub const BufferUsage = enum(i32) {
-    None = 0,
-    MapRead = 1,
-    MapWrite = 2,
-    CopySrc = 4,
-    CopyDst = 8,
-    Index = 16,
-    Vertex = 32,
-    Uniform = 64,
-    Storage = 128,
-    Indirect = 256,
-    QueryResolve = 512,
-    _,
+
+pub const BufferUsage = packed struct {
+    MapRead: bool align(@alignOf(Flags)) = false,
+    MapWrite: bool = false,
+    CopySrc: bool = false,
+    CopyDst: bool = false,
+    Index: bool = false,
+    Vertex: bool = false,
+    Uniform: bool = false,
+    Storage: bool = false,
+    Indirect: bool = false,
+    QueryResolve: bool = false,
+    _reserved_bit_10: bool = false,
+    _reserved_bit_11: bool = false,
+    _reserved_bit_12: bool = false,
+    _reserved_bit_13: bool = false,
+    _reserved_bit_14: bool = false,
+    _reserved_bit_15: bool = false,
+    _reserved_bit_16: bool = false,
+    _reserved_bit_17: bool = false,
+    _reserved_bit_18: bool = false,
+    _reserved_bit_19: bool = false,
+    _reserved_bit_20: bool = false,
+    _reserved_bit_21: bool = false,
+    _reserved_bit_22: bool = false,
+    _reserved_bit_23: bool = false,
+    _reserved_bit_24: bool = false,
+    _reserved_bit_25: bool = false,
+    _reserved_bit_26: bool = false,
+    _reserved_bit_27: bool = false,
+    _reserved_bit_28: bool = false,
+    _reserved_bit_29: bool = false,
+    _reserved_bit_30: bool = false,
+    _reserved_bit_31: bool = false,
+
+    pub usingnamespace FlagsMixin(@This(), Flags);
 };
+
 pub const ColorWriteMask = packed struct {
     Red: bool = false,
     Green: bool = false,
@@ -468,18 +492,16 @@ pub const ShaderStage = enum(i32) {
     Compute = 4,
 };
 pub const TextureUsage = packed struct {
-    const Self = @This();
-    pub usingnamespace FlagsMixin(Self, Flags);
-
     CopySrc: bool = false,
     CopyDst: bool = false,
     TextureBinding: bool = false,
     StorageBinding: bool = false,
     RenderAttachment: bool = false,
     _reserved_05_31: u27 = 0,
+
+    pub usingnamespace FlagsMixin(@This(), Flags);
 };
 
-pub const BufferUsageFlags = Flags;
 pub const MapModeFlags = Flags;
 pub const ShaderStageFlags = Flags;
 pub const TextureUsageFlags = Flags;
@@ -522,9 +544,9 @@ pub const BufferBindingLayout = extern struct {
     minBindingSize: u64,
 };
 pub const BufferDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
-    usage: BufferUsageFlags,
+    nextInChain: ?*const ChainedStruct = null,
+    label: ?[*:0]const u8 = null,
+    usage: BufferUsage,
     size: u64,
     mappedAtCreation: bool,
 };
@@ -686,7 +708,7 @@ pub const ShaderModuleDescriptor = extern struct {
 pub const ShaderModuleSPIRVDescriptor = extern struct {
     chain: ChainedStruct,
     codeSize: u32,
-    code: [*c]const u32,
+    code: [*]const u32,
 };
 pub const ShaderModuleWGSLDescriptor = extern struct {
     chain: ChainedStruct,
@@ -849,7 +871,7 @@ pub const VertexBufferLayout = extern struct {
     arrayStride: u64,
     stepMode: VertexStepMode,
     attributeCount: u32,
-    attributes: [*c]const VertexAttribute,
+    attributes: [*]const VertexAttribute,
 };
 pub const BindGroupLayoutDescriptor = extern struct {
     nextInChain: [*c]const ChainedStruct,
@@ -1068,7 +1090,7 @@ pub extern fn wgpuComputePipelineGetBindGroupLayout(computePipeline: ComputePipe
 pub extern fn wgpuComputePipelineSetLabel(computePipeline: ComputePipeline, label: [*c]const u8) void;
 pub extern fn wgpuDeviceCreateBindGroup(device: Device, descriptor: [*c]const BindGroupDescriptor) BindGroup;
 pub extern fn wgpuDeviceCreateBindGroupLayout(device: Device, descriptor: [*c]const BindGroupLayoutDescriptor) BindGroupLayout;
-pub extern fn wgpuDeviceCreateBuffer(device: Device, descriptor: [*c]const BufferDescriptor) Buffer;
+pub extern fn wgpuDeviceCreateBuffer(device: Device, descriptor: *const BufferDescriptor) Buffer;
 pub extern fn wgpuDeviceCreateCommandEncoder(device: Device, descriptor: *const CommandEncoderDescriptor) CommandEncoder;
 pub extern fn wgpuDeviceCreateComputePipeline(device: Device, descriptor: [*c]const ComputePipelineDescriptor) ComputePipeline;
 pub extern fn wgpuDeviceCreateComputePipelineAsync(device: Device, descriptor: [*c]const ComputePipelineDescriptor, callback: CreateComputePipelineAsyncCallback, userdata: ?*c_void) void;
@@ -1094,7 +1116,7 @@ pub extern fn wgpuInstanceRequestAdapter(instance: Instance, options: ?*const Re
 pub extern fn wgpuQuerySetDestroy(querySet: QuerySet) void;
 pub extern fn wgpuQueueOnSubmittedWorkDone(queue: Queue, signalValue: u64, callback: QueueWorkDoneCallback, userdata: ?*c_void) void;
 pub extern fn wgpuQueueSubmit(queue: Queue, commandCount: u32, commands: [*]const CommandBuffer) void;
-pub extern fn wgpuQueueWriteBuffer(queue: Queue, buffer: Buffer, bufferOffset: u64, data: ?*const c_void, size: usize) void;
+pub extern fn wgpuQueueWriteBuffer(queue: Queue, buffer: Buffer, bufferOffset: u64, data: *const c_void, size: usize) void;
 pub extern fn wgpuQueueWriteTexture(queue: Queue, destination: [*c]const ImageCopyTexture, data: ?*const c_void, dataSize: usize, dataLayout: [*c]const TextureDataLayout, writeSize: [*c]const Extent3D) void;
 pub extern fn wgpuRenderBundleEncoderDraw(renderBundleEncoder: RenderBundleEncoder, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) void;
 pub extern fn wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: RenderBundleEncoder, indexCount: u32, instanceCount: u32, firstIndex: u32, baseVertex: i32, firstInstance: u32) void;
@@ -1186,12 +1208,12 @@ pub extern fn wgpuShaderModuleDrop(shaderModule: ShaderModule) void;
 pub extern fn wgpuCommandBufferDrop(commandBuffer: CommandBuffer) void;
 pub extern fn wgpuRenderBundleDrop(renderBundle: RenderBundle) void;
 pub extern fn wgpuComputePipelineDrop(computePipeline: ComputePipeline) void;
-pub const _WHOLE_SIZE = @as(c_ulonglong, 0xffffffffffffffff);
-pub const _COPY_STRIDE_UNDEFINED = @as(c_ulong, 0xffffffff);
-pub const _LIMIT_U32_UNDEFINED = @as(c_ulong, 0xffffffff);
-pub const _LIMIT_U64_UNDEFINED = @as(c_ulonglong, 0xffffffffffffffff);
-pub const _ARRAY_LAYER_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
-pub const _MIP_LEVEL_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const WHOLE_SIZE = @as(c_ulonglong, 0xffffffffffffffff);
+pub const COPY_STRIDE_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const LIMIT_U32_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const LIMIT_U64_UNDEFINED = @as(c_ulonglong, 0xffffffffffffffff);
+pub const ARRAY_LAYER_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const MIP_LEVEL_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
 // pub const AdapterImpl = struct_AdapterImpl;
 // pub const BindGroupImpl = struct_BindGroupImpl;
 // pub const BindGroupLayoutImpl = struct_BindGroupLayoutImpl;
