@@ -27,51 +27,45 @@ pub fn FlagsMixin(comptime FlagsType: type, comptime Int: type) type {
     };
 }
 
-pub fn toChainedStruct(ptr: anytype) *const WGPUChainedStruct {
-    const Ptr = @TypeOf(ptr);
-    // if (!std.meta.trait.isSingleItemPtr(Ptr)) @compileError("given ptr is not single item pointer");
-    const PtrType = std.meta.Child(Ptr);
-    return @ptrCast(*const WGPUChainedStruct, @alignCast(@alignOf(PtrType), ptr));
-}
 pub const Flags = u32;
-pub const WGPUAdapter = enum(usize) { null_handle = 0, _ };
-pub const WGPUBindGroup = enum(usize) { null_handle = 0, _ };
-pub const WGPUBindGroupLayout = enum(usize) { null_handle = 0, _ };
-pub const WGPUBuffer = enum(usize) { null_handle = 0, _ };
-pub const WGPUCommandBuffer = enum(usize) { null_handle = 0, _ };
-pub const WGPUCommandEncoder = enum(usize) { null_handle = 0, _ };
-pub const WGPUComputePassEncoder = enum(usize) { null_handle = 0, _ };
-pub const WGPUComputePipeline = enum(usize) { null_handle = 0, _ };
-pub const WGPUDevice = enum(usize) { null_handle = 0, _ };
-pub const WGPUInstance = enum(usize) { null_handle = 0, _ };
-pub const WGPUPipelineLayout = enum(usize) { null_handle = 0, _ };
-pub const WGPUQuerySet = enum(usize) { null_handle = 0, _ };
-pub const WGPUQueue = enum(usize) { null_handle = 0, _ };
-pub const WGPURenderBundle = enum(usize) { null_handle = 0, _ };
-pub const WGPURenderBundleEncoder = enum(usize) { null_handle = 0, _ };
-pub const WGPURenderPassEncoder = enum(usize) { null_handle = 0, _ };
-pub const WGPURenderPipeline = enum(usize) { null_handle = 0, _ };
-pub const WGPUSampler = enum(usize) { null_handle = 0, _ };
-pub const WGPUShaderModule = enum(usize) { null_handle = 0, _ };
-pub const WGPUSurface = enum(usize) { null_handle = 0, _ };
-pub const WGPUSwapChain = enum(usize) { null_handle = 0, _ };
-pub const WGPUTexture = enum(usize) { null_handle = 0, _ };
-pub const WGPUTextureView = enum(usize) { null_handle = 0, _ };
+pub const Adapter = enum(usize) { null_handle = 0, _ };
+pub const BindGroup = enum(usize) { null_handle = 0, _ };
+pub const BindGroupLayout = enum(usize) { null_handle = 0, _ };
+pub const Buffer = enum(usize) { null_handle = 0, _ };
+pub const CommandBuffer = enum(usize) { null_handle = 0, _ };
+pub const CommandEncoder = enum(usize) { null_handle = 0, _ };
+pub const ComputePassEncoder = enum(usize) { null_handle = 0, _ };
+pub const ComputePipeline = enum(usize) { null_handle = 0, _ };
+pub const Device = enum(usize) { null_handle = 0, _ };
+pub const Instance = enum(usize) { null_handle = 0, _ };
+pub const PipelineLayout = enum(usize) { null_handle = 0, _ };
+pub const QuerySet = enum(usize) { null_handle = 0, _ };
+pub const Queue = enum(usize) { null_handle = 0, _ };
+pub const RenderBundle = enum(usize) { null_handle = 0, _ };
+pub const RenderBundleEncoder = enum(usize) { null_handle = 0, _ };
+pub const RenderPassEncoder = enum(usize) { null_handle = 0, _ };
+pub const RenderPipeline = enum(usize) { null_handle = 0, _ };
+pub const Sampler = enum(usize) { null_handle = 0, _ };
+pub const ShaderModule = enum(usize) { null_handle = 0, _ };
+pub const Surface = enum(usize) { null_handle = 0, _ };
+pub const SwapChain = enum(usize) { null_handle = 0, _ };
+pub const Texture = enum(usize) { null_handle = 0, _ };
+pub const TextureView = enum(usize) { null_handle = 0, _ };
 
-pub const WGPUAdapterType = enum(i32) {
+pub const AdapterType = enum(i32) {
     DiscreteGpu = 0,
     IntegratedGpu = 1,
     Cpu = 2,
     Unknown = 3,
     _,
 };
-pub const WGPUAddressMode = enum(i32) {
+pub const AddressMode = enum(i32) {
     Repeat = 0,
     MirrorRepeat = 1,
     ClampToEdge = 2,
     _,
 };
-pub const WGPUBackendType = enum(i32) {
+pub const BackendType = enum(i32) {
     Null = 0,
     WebGPU = 1,
     D3D11 = 2,
@@ -82,7 +76,7 @@ pub const WGPUBackendType = enum(i32) {
     OpenGLES = 7,
     _,
 };
-pub const WGPUBlendFactor = enum(i32) {
+pub const BlendFactor = enum(i32) {
     Zero = 0,
     One = 1,
     Src = 2,
@@ -99,7 +93,7 @@ pub const WGPUBlendFactor = enum(i32) {
     _,
 };
 
-pub const WGPUBlendOperation = enum(i32) {
+pub const BlendOperation = enum(i32) {
     Add = 0,
     Subtract = 1,
     ReverseSubtract = 2,
@@ -107,14 +101,14 @@ pub const WGPUBlendOperation = enum(i32) {
     Max = 4,
     _,
 };
-pub const WGPUBufferBindingType = enum(i32) {
+pub const BufferBindingType = enum(i32) {
     Undefined = 0,
     Uniform = 1,
     Storage = 2,
     ReadOnlyStorage = 3,
     _,
 };
-pub const WGPUBufferMapAsyncStatus = enum(i32) {
+pub const BufferMapAsyncStatus = enum(i32) {
     Success = 0,
     Error = 1,
     Unknown = 2,
@@ -123,7 +117,7 @@ pub const WGPUBufferMapAsyncStatus = enum(i32) {
     UnmappedBeforeCallback = 5,
     _,
 };
-pub const WGPUCompareFunction = enum(i32) {
+pub const CompareFunction = enum(i32) {
     Undefined = 0,
     Never = 1,
     Less = 2,
@@ -135,13 +129,13 @@ pub const WGPUCompareFunction = enum(i32) {
     Always = 8,
     _,
 };
-pub const WGPUCompilationMessageType = enum(i32) {
+pub const CompilationMessageType = enum(i32) {
     Error = 0,
     Warning = 1,
     Info = 2,
     _,
 };
-pub const WGPUCreatePipelineAsyncStatus = enum(i32) {
+pub const CreatePipelineAsyncStatus = enum(i32) {
     Success = 0,
     Error = 1,
     DeviceLost = 2,
@@ -149,24 +143,24 @@ pub const WGPUCreatePipelineAsyncStatus = enum(i32) {
     Unknown = 4,
     _,
 };
-pub const WGPUCullMode = enum(i32) {
+pub const CullMode = enum(i32) {
     None = 0,
     Front = 1,
     Back = 2,
     _,
 };
-pub const WGPUDeviceLostReason = enum(i32) {
+pub const DeviceLostReason = enum(i32) {
     Undefined = 0,
     Destroyed = 1,
     _,
 };
-pub const WGPUErrorFilter = enum(i32) {
+pub const ErrorFilter = enum(i32) {
     None = 0,
     Validation = 1,
     OutOfMemory = 2,
     _,
 };
-pub const WGPUErrorType = enum(i32) {
+pub const ErrorType = enum(i32) {
     NoError = 0,
     Validation = 1,
     OutOfMemory = 2,
@@ -174,7 +168,7 @@ pub const WGPUErrorType = enum(i32) {
     DeviceLost = 4,
     _,
 };
-pub const WGPUFeatureName = enum(i32) {
+pub const FeatureName = enum(i32) {
     Undefined = 0,
     DepthClamping = 1,
     Depth24UnormStencil8 = 2,
@@ -184,28 +178,28 @@ pub const WGPUFeatureName = enum(i32) {
     TextureCompressionBC = 6,
     _,
 };
-pub const WGPUFilterMode = enum(i32) {
+pub const FilterMode = enum(i32) {
     Nearest = 0,
     Linear = 1,
     _,
 };
-pub const WGPUFrontFace = enum(i32) {
+pub const FrontFace = enum(i32) {
     CCW = 0,
     CW = 1,
     _,
 };
-pub const WGPUIndexFormat = enum(i32) {
+pub const IndexFormat = enum(i32) {
     Undefined = 0,
     Uint16 = 1,
     Uint32 = 2,
     _,
 };
-pub const WGPULoadOp = enum(i32) {
+pub const LoadOp = enum(i32) {
     Clear = 0,
     Load = 1,
     _,
 };
-pub const WGPUPipelineStatisticName = enum(i32) {
+pub const PipelineStatisticName = enum(i32) {
     VertexShaderInvocations = 0,
     ClipperInvocations = 1,
     ClipperPrimitivesOut = 2,
@@ -213,18 +207,18 @@ pub const WGPUPipelineStatisticName = enum(i32) {
     ComputeShaderInvocations = 4,
     _,
 };
-pub const WGPUPowerPreference = enum(i32) {
+pub const PowerPreference = enum(i32) {
     LowPower = 0,
     HighPerformance = 1,
     _,
 };
-pub const WGPUPresentMode = enum(i32) {
+pub const PresentMode = enum(i32) {
     Immediate = 0,
     Mailbox = 1,
     Fifo = 2,
     _,
 };
-pub const WGPUPrimitiveTopology = enum(i32) {
+pub const PrimitiveTopology = enum(i32) {
     PointList = 0,
     LineList = 1,
     LineStrip = 2,
@@ -232,33 +226,33 @@ pub const WGPUPrimitiveTopology = enum(i32) {
     TriangleStrip = 4,
     _,
 };
-pub const WGPUQueryType = enum(i32) {
+pub const QueryType = enum(i32) {
     Occlusion = 0,
     PipelineStatistics = 1,
     Timestamp = 2,
     _,
 };
-pub const WGPUQueueWorkDoneStatus = enum(i32) {
+pub const QueueWorkDoneStatus = enum(i32) {
     Success = 0,
     Error = 1,
     Unknown = 2,
     DeviceLost = 3,
     _,
 };
-pub const WGPURequestAdapterStatus = enum(i32) {
+pub const RequestAdapterStatus = enum(i32) {
     Success = 0,
     Unavailable = 1,
     Error = 2,
     Unknown = 3,
     _,
 };
-pub const WGPURequestDeviceStatus = enum(i32) {
+pub const RequestDeviceStatus = enum(i32) {
     Success = 0,
     Error = 1,
     Unknown = 2,
     _,
 };
-pub const WGPUSType = enum(i32) {
+pub const SType = enum(i32) {
     Invalid = 0,
     SurfaceDescriptorFromMetalLayer = 1,
     SurfaceDescriptorFromWindowsHWND = 2,
@@ -273,14 +267,14 @@ pub const WGPUSType = enum(i32) {
     AdapterExtras = 1610612738,
     _,
 };
-pub const WGPUSamplerBindingType = enum(i32) {
+pub const SamplerBindingType = enum(i32) {
     Undefined = 0,
     Filtering = 1,
     NonFiltering = 2,
     Comparison = 3,
     _,
 };
-pub const WGPUStencilOperation = enum(i32) {
+pub const StencilOperation = enum(i32) {
     Keep = 0,
     Zero = 1,
     Replace = 2,
@@ -291,36 +285,36 @@ pub const WGPUStencilOperation = enum(i32) {
     DecrementWrap = 7,
     _,
 };
-pub const WGPUStorageTextureAccess = enum(i32) {
+pub const StorageTextureAccess = enum(i32) {
     Undefined = 0,
     WriteOnly = 1,
     _,
 };
-pub const WGPUStoreOp = enum(i32) {
+pub const StoreOp = enum(i32) {
     Store = 0,
     Discard = 1,
     _,
 };
-pub const WGPUTextureAspect = enum(i32) {
+pub const TextureAspect = enum(i32) {
     All = 0,
     StencilOnly = 1,
     DepthOnly = 2,
     _,
 };
-pub const WGPUTextureComponentType = enum(i32) {
+pub const TextureComponentType = enum(i32) {
     Float = 0,
     Sint = 1,
     Uint = 2,
     DepthComparison = 3,
     _,
 };
-pub const WGPUTextureDimension = enum(i32) {
+pub const TextureDimension = enum(i32) {
     @"1D" = 0,
     @"2D" = 1,
     @"3D" = 2,
     _,
 };
-pub const WGPUTextureFormat = enum(i32) {
+pub const TextureFormat = enum(i32) {
     Undefined = 0,
     R8Unorm = 1,
     R8Snorm = 2,
@@ -379,7 +373,7 @@ pub const WGPUTextureFormat = enum(i32) {
     BC7RGBAUnormSrgb = 55,
     _,
 };
-pub const WGPUTextureSampleType = enum(i32) {
+pub const TextureSampleType = enum(i32) {
     Undefined = 0,
     Float = 1,
     UnfilterableFloat = 2,
@@ -388,7 +382,7 @@ pub const WGPUTextureSampleType = enum(i32) {
     Uint = 5,
     _,
 };
-pub const WGPUTextureViewDimension = enum(i32) {
+pub const TextureViewDimension = enum(i32) {
     Undefined = 0,
     @"1D" = 1,
     @"2D" = 2,
@@ -398,7 +392,7 @@ pub const WGPUTextureViewDimension = enum(i32) {
     @"3D" = 6,
     _,
 };
-pub const WGPUVertexFormat = enum(i32) {
+pub const VertexFormat = enum(i32) {
     Undefined = 0,
     Uint8x2 = 1,
     Uint8x4 = 2,
@@ -432,12 +426,12 @@ pub const WGPUVertexFormat = enum(i32) {
     Sint32x4 = 30,
     _,
 };
-pub const WGPUVertexStepMode = enum(i32) {
+pub const VertexStepMode = enum(i32) {
     Vertex = 0,
     Instance = 1,
     _,
 };
-pub const WGPUBufferUsage = enum(i32) {
+pub const BufferUsage = enum(i32) {
     None = 0,
     MapRead = 1,
     MapWrite = 2,
@@ -451,7 +445,7 @@ pub const WGPUBufferUsage = enum(i32) {
     QueryResolve = 512,
     _,
 };
-pub const WGPUColorWriteMask = packed struct {
+pub const ColorWriteMask = packed struct {
     Red: bool = false,
     Green: bool = false,
     Blue: bool = false,
@@ -462,18 +456,18 @@ pub const WGPUColorWriteMask = packed struct {
     const Self = @This();
     pub usingnamespace FlagsMixin(Self, Flags);
 };
-pub const WGPUMapMode = enum(i32) {
+pub const MapMode = enum(i32) {
     None = 0,
     Read = 1,
     Write = 2,
 };
-pub const WGPUShaderStage = enum(i32) {
+pub const ShaderStage = enum(i32) {
     None = 0,
     Vertex = 1,
     Fragment = 2,
     Compute = 4,
 };
-pub const WGPUTextureUsage = packed struct {
+pub const TextureUsage = packed struct {
     const Self = @This();
     pub usingnamespace FlagsMixin(Self, Flags);
 
@@ -485,96 +479,96 @@ pub const WGPUTextureUsage = packed struct {
     _reserved_05_31: u27 = 0,
 };
 
-pub const WGPUBufferUsageFlags = Flags;
-pub const WGPUMapModeFlags = Flags;
-pub const WGPUShaderStageFlags = Flags;
-pub const WGPUTextureUsageFlags = Flags;
+pub const BufferUsageFlags = Flags;
+pub const MapModeFlags = Flags;
+pub const ShaderStageFlags = Flags;
+pub const TextureUsageFlags = Flags;
 
-pub const WGPUChainedStruct = extern struct {
-    next: ?*const WGPUChainedStruct,
-    sType: WGPUSType,
+pub const ChainedStruct = extern struct {
+    next: ?*const ChainedStruct,
+    sType: SType,
 };
-pub const WGPUChainedStructOut = extern struct {
-    next: [*c]WGPUChainedStructOut,
-    sType: WGPUSType,
+pub const ChainedStructOut = extern struct {
+    next: ?*ChainedStructOut,
+    sType: SType,
 };
-pub const WGPUAdapterProperties = extern struct {
-    nextInChain: [*c]WGPUChainedStructOut,
+pub const AdapterProperties = extern struct {
+    nextInChain: ?*ChainedStructOut = null,
     vendorID: u32,
     deviceID: u32,
-    name: [*c]const u8,
-    driverDescription: [*c]const u8,
-    adapterType: WGPUAdapterType,
-    backendType: WGPUBackendType,
+    name: ?[*:0]const u8,
+    driverDescription: [*:0]const u8,
+    adapterType: AdapterType,
+    backendType: BackendType,
 };
-pub const WGPUBindGroupEntry = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const BindGroupEntry = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     binding: u32,
-    buffer: WGPUBuffer,
+    buffer: Buffer,
     offset: u64,
     size: u64,
-    sampler: WGPUSampler,
-    textureView: WGPUTextureView,
+    sampler: Sampler,
+    textureView: TextureView,
 };
-pub const WGPUBlendComponent = extern struct {
-    operation: WGPUBlendOperation,
-    srcFactor: WGPUBlendFactor,
-    dstFactor: WGPUBlendFactor,
+pub const BlendComponent = extern struct {
+    operation: BlendOperation,
+    srcFactor: BlendFactor,
+    dstFactor: BlendFactor,
 };
-pub const WGPUBufferBindingLayout = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    type: WGPUBufferBindingType,
+pub const BufferBindingLayout = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    type: BufferBindingType,
     hasDynamicOffset: bool,
     minBindingSize: u64,
 };
-pub const WGPUBufferDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const BufferDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    usage: WGPUBufferUsageFlags,
+    usage: BufferUsageFlags,
     size: u64,
     mappedAtCreation: bool,
 };
-pub const WGPUColor = extern struct {
+pub const Color = extern struct {
     r: f64,
     g: f64,
     b: f64,
     a: f64,
 };
-pub const WGPUCommandBufferDescriptor = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const CommandBufferDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     label: ?[*:0]const u8,
 };
-pub const WGPUCommandEncoderDescriptor = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const CommandEncoderDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     label: [*:0]const u8,
 };
-pub const WGPUCompilationMessage = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const CompilationMessage = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     message: [*c]const u8,
-    type: WGPUCompilationMessageType,
+    type: CompilationMessageType,
     lineNum: u64,
     linePos: u64,
     offset: u64,
     length: u64,
 };
-pub const WGPUComputePassDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const ComputePassDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
 };
-pub const WGPUConstantEntry = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const ConstantEntry = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     key: [*c]const u8,
     value: f64,
 };
-pub const WGPUExtent3D = extern struct {
+pub const Extent3D = extern struct {
     width: u32,
     height: u32,
     depthOrArrayLayers: u32,
 };
-pub const WGPUInstanceDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const InstanceDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
 };
-pub const WGPULimits = extern struct {
+pub const Limits = extern struct {
     maxTextureDimension1D: u32 = 8192,
     maxTextureDimension2D: u32 = 8192,
     maxTextureDimension3D: u32 = 2048,
@@ -602,556 +596,556 @@ pub const WGPULimits = extern struct {
     maxComputeWorkgroupSizeZ: u32 = 64,
     maxComputeWorkgroupsPerDimension: u32 = 65535,
 };
-pub const WGPUMultisampleState = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const MultisampleState = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     count: u32,
     mask: u32,
     alphaToCoverageEnabled: bool,
 };
-pub const WGPUOrigin3D = extern struct {
+pub const Origin3D = extern struct {
     x: u32,
     y: u32,
     z: u32,
 };
-pub const WGPUPipelineLayoutDescriptor = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const PipelineLayoutDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     label: ?[*:0]const u8 = null,
     bindGroupLayoutCount: u32,
-    bindGroupLayouts: ?[*]const WGPUBindGroupLayout,
+    bindGroupLayouts: ?[*]const BindGroupLayout,
 };
-pub const WGPUPrimitiveDepthClampingState = extern struct {
-    chain: WGPUChainedStruct,
+pub const PrimitiveDepthClampingState = extern struct {
+    chain: ChainedStruct,
     clampDepth: bool,
 };
-pub const WGPUPrimitiveState = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
-    topology: WGPUPrimitiveTopology,
-    stripIndexFormat: WGPUIndexFormat,
-    frontFace: WGPUFrontFace,
-    cullMode: WGPUCullMode,
+pub const PrimitiveState = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
+    topology: PrimitiveTopology,
+    stripIndexFormat: IndexFormat,
+    frontFace: FrontFace,
+    cullMode: CullMode,
 };
-pub const WGPUQuerySetDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const QuerySetDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    type: WGPUQueryType,
+    type: QueryType,
     count: u32,
-    pipelineStatistics: [*c]const WGPUPipelineStatisticName,
+    pipelineStatistics: [*c]const PipelineStatisticName,
     pipelineStatisticsCount: u32,
 };
-pub const WGPURenderBundleDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const RenderBundleDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
 };
-pub const WGPURenderBundleEncoderDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const RenderBundleEncoderDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
     colorFormatsCount: u32,
-    colorFormats: [*c]const WGPUTextureFormat,
-    depthStencilFormat: WGPUTextureFormat,
+    colorFormats: [*c]const TextureFormat,
+    depthStencilFormat: TextureFormat,
     sampleCount: u32,
 };
-pub const WGPURenderPassDepthStencilAttachment = extern struct {
-    view: WGPUTextureView,
-    depthLoadOp: WGPULoadOp,
-    depthStoreOp: WGPUStoreOp,
+pub const RenderPassDepthStencilAttachment = extern struct {
+    view: TextureView,
+    depthLoadOp: LoadOp,
+    depthStoreOp: StoreOp,
     clearDepth: f32,
     depthReadOnly: bool,
-    stencilLoadOp: WGPULoadOp,
-    stencilStoreOp: WGPUStoreOp,
+    stencilLoadOp: LoadOp,
+    stencilStoreOp: StoreOp,
     clearStencil: u32,
     stencilReadOnly: bool,
 };
-pub const WGPURequestAdapterOptions = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    compatibleSurface: WGPUSurface,
-    powerPreference: WGPUPowerPreference,
+pub const RequestAdapterOptions = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    compatibleSurface: Surface,
+    powerPreference: PowerPreference,
     forceFallbackAdapter: bool,
 };
-pub const WGPUSamplerBindingLayout = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    type: WGPUSamplerBindingType,
+pub const SamplerBindingLayout = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    type: SamplerBindingType,
 };
-pub const WGPUSamplerDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const SamplerDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    addressModeU: WGPUAddressMode,
-    addressModeV: WGPUAddressMode,
-    addressModeW: WGPUAddressMode,
-    magFilter: WGPUFilterMode,
-    minFilter: WGPUFilterMode,
-    mipmapFilter: WGPUFilterMode,
+    addressModeU: AddressMode,
+    addressModeV: AddressMode,
+    addressModeW: AddressMode,
+    magFilter: FilterMode,
+    minFilter: FilterMode,
+    mipmapFilter: FilterMode,
     lodMinClamp: f32,
     lodMaxClamp: f32,
-    compare: WGPUCompareFunction,
+    compare: CompareFunction,
     maxAnisotropy: u16,
 };
-pub const WGPUShaderModuleDescriptor = extern struct {
-    nextInChain: *const WGPUChainedStruct,
+pub const ShaderModuleDescriptor = extern struct {
+    nextInChain: *const ChainedStruct,
     label: ?[*:0]const u8,
 };
-pub const WGPUShaderModuleSPIRVDescriptor = extern struct {
-    chain: WGPUChainedStruct,
+pub const ShaderModuleSPIRVDescriptor = extern struct {
+    chain: ChainedStruct,
     codeSize: u32,
     code: [*c]const u32,
 };
-pub const WGPUShaderModuleWGSLDescriptor = extern struct {
-    chain: WGPUChainedStruct,
+pub const ShaderModuleWGSLDescriptor = extern struct {
+    chain: ChainedStruct,
     source: [*]const u8,
 };
-pub const WGPUStencilFaceState = extern struct {
-    compare: WGPUCompareFunction,
-    failOp: WGPUStencilOperation,
-    depthFailOp: WGPUStencilOperation,
-    passOp: WGPUStencilOperation,
+pub const StencilFaceState = extern struct {
+    compare: CompareFunction,
+    failOp: StencilOperation,
+    depthFailOp: StencilOperation,
+    passOp: StencilOperation,
 };
-pub const WGPUStorageTextureBindingLayout = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    access: WGPUStorageTextureAccess,
-    format: WGPUTextureFormat,
-    viewDimension: WGPUTextureViewDimension,
+pub const StorageTextureBindingLayout = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    access: StorageTextureAccess,
+    format: TextureFormat,
+    viewDimension: TextureViewDimension,
 };
-pub const WGPUSurfaceDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const SurfaceDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
 };
-pub const WGPUSurfaceDescriptorFromCanvasHTMLSelector = extern struct {
-    chain: WGPUChainedStruct,
+pub const SurfaceDescriptorFromCanvasHTMLSelector = extern struct {
+    chain: ChainedStruct,
     selector: [*c]const u8,
 };
-pub const WGPUSurfaceDescriptorFromMetalLayer = extern struct {
-    chain: WGPUChainedStruct,
+pub const SurfaceDescriptorFromMetalLayer = extern struct {
+    chain: ChainedStruct,
     layer: ?*c_void,
 };
-pub const WGPUSurfaceDescriptorFromWindowsHWND = extern struct {
-    chain: WGPUChainedStruct,
+pub const SurfaceDescriptorFromWindowsHWND = extern struct {
+    chain: ChainedStruct,
     hinstance: ?*c_void,
     hwnd: ?*c_void,
 };
-pub const WGPUSurfaceDescriptorFromXlib = extern struct {
-    chain: WGPUChainedStruct,
+pub const SurfaceDescriptorFromXlib = extern struct {
+    chain: ChainedStruct,
     display: ?*c_void,
     window: u32,
 };
-pub const WGPUSwapChainDescriptor = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const SwapChainDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     label: ?[*:0]const u8 = null,
-    usage: WGPUTextureUsage,
-    format: WGPUTextureFormat,
+    usage: TextureUsage,
+    format: TextureFormat,
     width: u32,
     height: u32,
-    presentMode: WGPUPresentMode,
+    presentMode: PresentMode,
 };
-pub const WGPUTextureBindingLayout = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    sampleType: WGPUTextureSampleType,
-    viewDimension: WGPUTextureViewDimension,
+pub const TextureBindingLayout = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    sampleType: TextureSampleType,
+    viewDimension: TextureViewDimension,
     multisampled: bool,
 };
-pub const WGPUTextureDataLayout = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const TextureDataLayout = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     offset: u64,
     bytesPerRow: u32,
     rowsPerImage: u32,
 };
-pub const WGPUTextureViewDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const TextureViewDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    format: WGPUTextureFormat,
-    dimension: WGPUTextureViewDimension,
+    format: TextureFormat,
+    dimension: TextureViewDimension,
     baseMipLevel: u32,
     mipLevelCount: u32,
     baseArrayLayer: u32,
     arrayLayerCount: u32,
-    aspect: WGPUTextureAspect,
+    aspect: TextureAspect,
 };
-pub const WGPUVertexAttribute = extern struct {
-    format: WGPUVertexFormat,
+pub const VertexAttribute = extern struct {
+    format: VertexFormat,
     offset: u64,
     shaderLocation: u32,
 };
-pub const WGPUBindGroupDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const BindGroupDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    layout: WGPUBindGroupLayout,
+    layout: BindGroupLayout,
     entryCount: u32,
-    entries: [*c]const WGPUBindGroupEntry,
+    entries: [*c]const BindGroupEntry,
 };
-pub const WGPUBindGroupLayoutEntry = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const BindGroupLayoutEntry = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     binding: u32,
-    visibility: WGPUShaderStageFlags,
-    buffer: WGPUBufferBindingLayout,
-    sampler: WGPUSamplerBindingLayout,
-    texture: WGPUTextureBindingLayout,
-    storageTexture: WGPUStorageTextureBindingLayout,
+    visibility: ShaderStageFlags,
+    buffer: BufferBindingLayout,
+    sampler: SamplerBindingLayout,
+    texture: TextureBindingLayout,
+    storageTexture: StorageTextureBindingLayout,
 };
-pub const WGPUBlendState = extern struct {
-    color: WGPUBlendComponent,
-    alpha: WGPUBlendComponent,
+pub const BlendState = extern struct {
+    color: BlendComponent,
+    alpha: BlendComponent,
 };
-pub const WGPUCompilationInfo = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const CompilationInfo = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     messageCount: u32,
-    messages: [*c]const WGPUCompilationMessage,
+    messages: [*c]const CompilationMessage,
 };
-pub const WGPUDepthStencilState = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    format: WGPUTextureFormat,
+pub const DepthStencilState = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    format: TextureFormat,
     depthWriteEnabled: bool,
-    depthCompare: WGPUCompareFunction,
-    stencilFront: WGPUStencilFaceState,
-    stencilBack: WGPUStencilFaceState,
+    depthCompare: CompareFunction,
+    stencilFront: StencilFaceState,
+    stencilBack: StencilFaceState,
     stencilReadMask: u32,
     stencilWriteMask: u32,
     depthBias: i32,
     depthBiasSlopeScale: f32,
     depthBiasClamp: f32,
 };
-pub const WGPUImageCopyBuffer = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    layout: WGPUTextureDataLayout,
-    buffer: WGPUBuffer,
+pub const ImageCopyBuffer = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    layout: TextureDataLayout,
+    buffer: Buffer,
 };
-pub const WGPUImageCopyTexture = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    texture: WGPUTexture,
+pub const ImageCopyTexture = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    texture: Texture,
     mipLevel: u32,
-    origin: WGPUOrigin3D,
-    aspect: WGPUTextureAspect,
+    origin: Origin3D,
+    aspect: TextureAspect,
 };
-pub const WGPUProgrammableStageDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    module: WGPUShaderModule,
+pub const ProgrammableStageDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
+    module: ShaderModule,
     entryPoint: [*c]const u8,
     constantCount: u32,
-    constants: [*c]const WGPUConstantEntry,
+    constants: [*c]const ConstantEntry,
 };
-pub const WGPURenderPassColorAttachment = extern struct {
-    view: WGPUTextureView,
-    resolveTarget: WGPUTextureView,
-    loadOp: WGPULoadOp,
-    storeOp: WGPUStoreOp,
-    clearColor: WGPUColor,
+pub const RenderPassColorAttachment = extern struct {
+    view: TextureView,
+    resolveTarget: TextureView,
+    loadOp: LoadOp,
+    storeOp: StoreOp,
+    clearColor: Color,
 };
-pub const WGPURequiredLimits = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
-    limits: WGPULimits,
+pub const RequiredLimits = extern struct {
+    nextInChain: ?*const ChainedStruct,
+    limits: Limits,
 };
-pub const WGPUSupportedLimits = extern struct {
-    nextInChain: [*c]WGPUChainedStructOut,
-    limits: WGPULimits,
+pub const SupportedLimits = extern struct {
+    nextInChain: [*c]ChainedStructOut,
+    limits: Limits,
 };
-pub const WGPUTextureDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const TextureDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    usage: WGPUTextureUsageFlags,
-    dimension: WGPUTextureDimension,
-    size: WGPUExtent3D,
-    format: WGPUTextureFormat,
+    usage: TextureUsageFlags,
+    dimension: TextureDimension,
+    size: Extent3D,
+    format: TextureFormat,
     mipLevelCount: u32,
     sampleCount: u32,
 };
-pub const WGPUVertexBufferLayout = extern struct {
+pub const VertexBufferLayout = extern struct {
     arrayStride: u64,
-    stepMode: WGPUVertexStepMode,
+    stepMode: VertexStepMode,
     attributeCount: u32,
-    attributes: [*c]const WGPUVertexAttribute,
+    attributes: [*c]const VertexAttribute,
 };
-pub const WGPUBindGroupLayoutDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const BindGroupLayoutDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
     entryCount: u32,
-    entries: [*c]const WGPUBindGroupLayoutEntry,
+    entries: [*c]const BindGroupLayoutEntry,
 };
-pub const WGPUColorTargetState = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
-    format: WGPUTextureFormat,
-    blend: ?*const WGPUBlendState,
-    writeMask: WGPUColorWriteMask,
+pub const ColorTargetState = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
+    format: TextureFormat,
+    blend: ?*const BlendState,
+    writeMask: ColorWriteMask,
 };
-pub const WGPUColorWriteMaskFlags = Flags;
-pub const WGPUComputePipelineDescriptor = extern struct {
-    nextInChain: [*c]const WGPUChainedStruct,
+pub const ColorWriteMaskFlags = Flags;
+pub const ComputePipelineDescriptor = extern struct {
+    nextInChain: [*c]const ChainedStruct,
     label: [*c]const u8,
-    layout: WGPUPipelineLayout,
-    compute: WGPUProgrammableStageDescriptor,
+    layout: PipelineLayout,
+    compute: ProgrammableStageDescriptor,
 };
-pub const WGPUDeviceDescriptor = extern struct {
-    nextInChain: *const WGPUChainedStruct,
+pub const DeviceDescriptor = extern struct {
+    nextInChain: *const ChainedStruct,
     requiredFeaturesCount: u32,
-    requiredFeatures: [*]const WGPUFeatureName,
-    requiredLimits: [*c]const WGPURequiredLimits,
+    requiredFeatures: [*]const FeatureName,
+    requiredLimits: [*]const RequiredLimits,
 };
-pub const WGPURenderPassDescriptor = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const RenderPassDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     label: ?[*:0]const u8 = null,
     colorAttachmentCount: u32,
-    colorAttachments: [*]const WGPURenderPassColorAttachment,
-    depthStencilAttachment: ?*const WGPURenderPassDepthStencilAttachment,
-    occlusionQuerySet: WGPUQuerySet,
+    colorAttachments: [*]const RenderPassColorAttachment,
+    depthStencilAttachment: ?*const RenderPassDepthStencilAttachment,
+    occlusionQuerySet: QuerySet,
 };
-pub const WGPUVertexState = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
-    module: WGPUShaderModule,
+pub const VertexState = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
+    module: ShaderModule,
     entryPoint: [*:0]const u8,
     constantCount: u32,
-    constants: [*]const WGPUConstantEntry,
+    constants: [*]const ConstantEntry,
     bufferCount: u32,
-    buffers: [*]const WGPUVertexBufferLayout,
+    buffers: [*]const VertexBufferLayout,
 };
-pub const WGPUFragmentState = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
-    module: WGPUShaderModule,
+pub const FragmentState = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
+    module: ShaderModule,
     entryPoint: [*:0]const u8,
     constantCount: u32,
-    constants: [*]const WGPUConstantEntry,
+    constants: [*]const ConstantEntry,
     targetCount: u32,
-    targets: [*]const WGPUColorTargetState,
+    targets: [*]const ColorTargetState,
 };
-pub const WGPURenderPipelineDescriptor = extern struct {
-    nextInChain: ?*const WGPUChainedStruct = null,
+pub const RenderPipelineDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct = null,
     label: ?[*:0]const u8,
-    layout: WGPUPipelineLayout,
-    vertex: WGPUVertexState,
-    primitive: WGPUPrimitiveState,
-    depthStencil: ?*const WGPUDepthStencilState,
-    multisample: WGPUMultisampleState,
-    fragment: ?*const WGPUFragmentState,
+    layout: PipelineLayout,
+    vertex: VertexState,
+    primitive: PrimitiveState,
+    depthStencil: ?*const DepthStencilState,
+    multisample: MultisampleState,
+    fragment: ?*const FragmentState,
 };
 
-pub const WGPUBufferMapCallback = ?fn (WGPUBufferMapAsyncStatus, ?*c_void) callconv(.C) void;
-pub const WGPUCreateComputePipelineAsyncCallback = ?fn (WGPUCreatePipelineAsyncStatus, WGPUComputePipeline, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const WGPUCreateRenderPipelineAsyncCallback = ?fn (WGPUCreatePipelineAsyncStatus, WGPURenderPipeline, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const WGPUDeviceLostCallback = ?fn (WGPUDeviceLostReason, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const WGPUErrorCallback = ?fn (WGPUErrorType, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const WGPUQueueWorkDoneCallback = ?fn (WGPUQueueWorkDoneStatus, ?*c_void) callconv(.C) void;
-pub const WGPURequestAdapterCallback = fn (WGPURequestAdapterStatus, WGPUAdapter, [*:0]const u8, *c_void) callconv(.C) void;
-pub const WGPURequestDeviceCallback = fn (WGPURequestDeviceStatus, WGPUDevice, [*:0]const u8, *c_void) callconv(.C) void;
-pub const WGPUProc = ?fn () callconv(.C) void;
-pub const WGPUProcCreateInstance = ?fn ([*c]const WGPUInstanceDescriptor) callconv(.C) WGPUInstance;
-pub const WGPUProcGetProcAddress = ?fn (WGPUDevice, [*c]const u8) callconv(.C) WGPUProc;
-pub const WGPUProcAdapterGetLimits = ?fn (WGPUAdapter, [*c]WGPUSupportedLimits) callconv(.C) bool;
-pub const WGPUProcAdapterGetProperties = ?fn (WGPUAdapter, [*c]WGPUAdapterProperties) callconv(.C) void;
-pub const WGPUProcAdapterHasFeature = ?fn (WGPUAdapter, WGPUFeatureName) callconv(.C) bool;
-pub const WGPUProcAdapterRequestDevice = ?fn (WGPUAdapter, [*c]const WGPUDeviceDescriptor, WGPURequestDeviceCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcBufferDestroy = ?fn (WGPUBuffer) callconv(.C) void;
-pub const WGPUProcBufferGetConstMappedRange = ?fn (WGPUBuffer, usize, usize) callconv(.C) ?*const c_void;
-pub const WGPUProcBufferGetMappedRange = ?fn (WGPUBuffer, usize, usize) callconv(.C) ?*c_void;
-pub const WGPUProcBufferMapAsync = ?fn (WGPUBuffer, WGPUMapModeFlags, usize, usize, WGPUBufferMapCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcBufferUnmap = ?fn (WGPUBuffer) callconv(.C) void;
-pub const WGPUProcCommandEncoderBeginComputePass = ?fn (WGPUCommandEncoder, [*c]const WGPUComputePassDescriptor) callconv(.C) WGPUComputePassEncoder;
-pub const WGPUProcCommandEncoderBeginRenderPass = ?fn (WGPUCommandEncoder, [*c]const WGPURenderPassDescriptor) callconv(.C) WGPURenderPassEncoder;
-pub const WGPUProcCommandEncoderCopyBufferToBuffer = ?fn (WGPUCommandEncoder, WGPUBuffer, u64, WGPUBuffer, u64, u64) callconv(.C) void;
-pub const WGPUProcCommandEncoderCopyBufferToTexture = ?fn (WGPUCommandEncoder, [*c]const WGPUImageCopyBuffer, [*c]const WGPUImageCopyTexture, [*c]const WGPUExtent3D) callconv(.C) void;
-pub const WGPUProcCommandEncoderCopyTextureToBuffer = ?fn (WGPUCommandEncoder, [*c]const WGPUImageCopyTexture, [*c]const WGPUImageCopyBuffer, [*c]const WGPUExtent3D) callconv(.C) void;
-pub const WGPUProcCommandEncoderCopyTextureToTexture = ?fn (WGPUCommandEncoder, [*c]const WGPUImageCopyTexture, [*c]const WGPUImageCopyTexture, [*c]const WGPUExtent3D) callconv(.C) void;
-pub const WGPUProcCommandEncoderFinish = ?fn (WGPUCommandEncoder, [*c]const WGPUCommandBufferDescriptor) callconv(.C) WGPUCommandBuffer;
-pub const WGPUProcCommandEncoderInsertDebugMarker = ?fn (WGPUCommandEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcCommandEncoderPopDebugGroup = ?fn (WGPUCommandEncoder) callconv(.C) void;
-pub const WGPUProcCommandEncoderPushDebugGroup = ?fn (WGPUCommandEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcCommandEncoderResolveQuerySet = ?fn (WGPUCommandEncoder, WGPUQuerySet, u32, u32, WGPUBuffer, u64) callconv(.C) void;
-pub const WGPUProcCommandEncoderWriteTimestamp = ?fn (WGPUCommandEncoder, WGPUQuerySet, u32) callconv(.C) void;
-pub const WGPUProcComputePassEncoderBeginPipelineStatisticsQuery = ?fn (WGPUComputePassEncoder, WGPUQuerySet, u32) callconv(.C) void;
-pub const WGPUProcComputePassEncoderDispatch = ?fn (WGPUComputePassEncoder, u32, u32, u32) callconv(.C) void;
-pub const WGPUProcComputePassEncoderDispatchIndirect = ?fn (WGPUComputePassEncoder, WGPUBuffer, u64) callconv(.C) void;
-pub const WGPUProcComputePassEncoderEndPass = ?fn (WGPUComputePassEncoder) callconv(.C) void;
-pub const WGPUProcComputePassEncoderEndPipelineStatisticsQuery = ?fn (WGPUComputePassEncoder) callconv(.C) void;
-pub const WGPUProcComputePassEncoderInsertDebugMarker = ?fn (WGPUComputePassEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcComputePassEncoderPopDebugGroup = ?fn (WGPUComputePassEncoder) callconv(.C) void;
-pub const WGPUProcComputePassEncoderPushDebugGroup = ?fn (WGPUComputePassEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcComputePassEncoderSetBindGroup = ?fn (WGPUComputePassEncoder, u32, WGPUBindGroup, u32, [*c]const u32) callconv(.C) void;
-pub const WGPUProcComputePassEncoderSetPipeline = ?fn (WGPUComputePassEncoder, WGPUComputePipeline) callconv(.C) void;
-pub const WGPUProcComputePassEncoderWriteTimestamp = ?fn (WGPUComputePassEncoder, WGPUQuerySet, u32) callconv(.C) void;
-pub const WGPUProcComputePipelineGetBindGroupLayout = ?fn (WGPUComputePipeline, u32) callconv(.C) WGPUBindGroupLayout;
-pub const WGPUProcComputePipelineSetLabel = ?fn (WGPUComputePipeline, [*c]const u8) callconv(.C) void;
-pub const WGPUProcDeviceCreateBindGroup = ?fn (WGPUDevice, [*c]const WGPUBindGroupDescriptor) callconv(.C) WGPUBindGroup;
-pub const WGPUProcDeviceCreateBindGroupLayout = ?fn (WGPUDevice, [*c]const WGPUBindGroupLayoutDescriptor) callconv(.C) WGPUBindGroupLayout;
-pub const WGPUProcDeviceCreateBuffer = ?fn (WGPUDevice, [*c]const WGPUBufferDescriptor) callconv(.C) WGPUBuffer;
-pub const WGPUProcDeviceCreateCommandEncoder = ?fn (WGPUDevice, [*c]const WGPUCommandEncoderDescriptor) callconv(.C) WGPUCommandEncoder;
-pub const WGPUProcDeviceCreateComputePipeline = ?fn (WGPUDevice, [*c]const WGPUComputePipelineDescriptor) callconv(.C) WGPUComputePipeline;
-pub const WGPUProcDeviceCreateComputePipelineAsync = ?fn (WGPUDevice, [*c]const WGPUComputePipelineDescriptor, WGPUCreateComputePipelineAsyncCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcDeviceCreatePipelineLayout = ?fn (WGPUDevice, [*c]const WGPUPipelineLayoutDescriptor) callconv(.C) WGPUPipelineLayout;
-pub const WGPUProcDeviceCreateQuerySet = ?fn (WGPUDevice, [*c]const WGPUQuerySetDescriptor) callconv(.C) WGPUQuerySet;
-pub const WGPUProcDeviceCreateRenderBundleEncoder = ?fn (WGPUDevice, [*c]const WGPURenderBundleEncoderDescriptor) callconv(.C) WGPURenderBundleEncoder;
-pub const WGPUProcDeviceCreateRenderPipeline = ?fn (WGPUDevice, [*c]const WGPURenderPipelineDescriptor) callconv(.C) WGPURenderPipeline;
-pub const WGPUProcDeviceCreateRenderPipelineAsync = ?fn (WGPUDevice, [*c]const WGPURenderPipelineDescriptor, WGPUCreateRenderPipelineAsyncCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcDeviceCreateSampler = ?fn (WGPUDevice, [*c]const WGPUSamplerDescriptor) callconv(.C) WGPUSampler;
-pub const WGPUProcDeviceCreateShaderModule = ?fn (WGPUDevice, [*c]const WGPUShaderModuleDescriptor) callconv(.C) WGPUShaderModule;
-pub const WGPUProcDeviceCreateSwapChain = ?fn (WGPUDevice, WGPUSurface, [*c]const WGPUSwapChainDescriptor) callconv(.C) WGPUSwapChain;
-pub const WGPUProcDeviceCreateTexture = ?fn (WGPUDevice, [*c]const WGPUTextureDescriptor) callconv(.C) WGPUTexture;
-pub const WGPUProcDeviceDestroy = ?fn (WGPUDevice) callconv(.C) void;
-pub const WGPUProcDeviceGetLimits = ?fn (WGPUDevice, [*c]WGPUSupportedLimits) callconv(.C) bool;
-pub const WGPUProcDeviceGetQueue = ?fn (WGPUDevice) callconv(.C) WGPUQueue;
-pub const WGPUProcDevicePopErrorScope = ?fn (WGPUDevice, WGPUErrorCallback, ?*c_void) callconv(.C) bool;
-pub const WGPUProcDevicePushErrorScope = ?fn (WGPUDevice, WGPUErrorFilter) callconv(.C) void;
-pub const WGPUProcDeviceSetDeviceLostCallback = ?fn (WGPUDevice, WGPUDeviceLostCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcDeviceSetUncapturedErrorCallback = ?fn (WGPUDevice, WGPUErrorCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcInstanceCreateSurface = ?fn (WGPUInstance, [*c]const WGPUSurfaceDescriptor) callconv(.C) WGPUSurface;
-pub const WGPUProcInstanceProcessEvents = ?fn (WGPUInstance) callconv(.C) void;
-pub const WGPUProcInstanceRequestAdapter = ?fn (WGPUInstance, [*c]const WGPURequestAdapterOptions, WGPURequestAdapterCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcQuerySetDestroy = ?fn (WGPUQuerySet) callconv(.C) void;
-pub const WGPUProcQueueOnSubmittedWorkDone = ?fn (WGPUQueue, u64, WGPUQueueWorkDoneCallback, ?*c_void) callconv(.C) void;
-pub const WGPUProcQueueSubmit = ?fn (WGPUQueue, u32, [*c]const WGPUCommandBuffer) callconv(.C) void;
-pub const WGPUProcQueueWriteBuffer = ?fn (WGPUQueue, WGPUBuffer, u64, ?*const c_void, usize) callconv(.C) void;
-pub const WGPUProcQueueWriteTexture = ?fn (WGPUQueue, [*c]const WGPUImageCopyTexture, ?*const c_void, usize, [*c]const WGPUTextureDataLayout, [*c]const WGPUExtent3D) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderDraw = ?fn (WGPURenderBundleEncoder, u32, u32, u32, u32) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderDrawIndexed = ?fn (WGPURenderBundleEncoder, u32, u32, u32, i32, u32) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderDrawIndexedIndirect = ?fn (WGPURenderBundleEncoder, WGPUBuffer, u64) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderDrawIndirect = ?fn (WGPURenderBundleEncoder, WGPUBuffer, u64) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderFinish = ?fn (WGPURenderBundleEncoder, [*c]const WGPURenderBundleDescriptor) callconv(.C) WGPURenderBundle;
-pub const WGPUProcRenderBundleEncoderInsertDebugMarker = ?fn (WGPURenderBundleEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderPopDebugGroup = ?fn (WGPURenderBundleEncoder) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderPushDebugGroup = ?fn (WGPURenderBundleEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderSetBindGroup = ?fn (WGPURenderBundleEncoder, u32, WGPUBindGroup, u32, [*c]const u32) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderSetIndexBuffer = ?fn (WGPURenderBundleEncoder, WGPUBuffer, WGPUIndexFormat, u64, u64) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderSetPipeline = ?fn (WGPURenderBundleEncoder, WGPURenderPipeline) callconv(.C) void;
-pub const WGPUProcRenderBundleEncoderSetVertexBuffer = ?fn (WGPURenderBundleEncoder, u32, WGPUBuffer, u64, u64) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderBeginOcclusionQuery = ?fn (WGPURenderPassEncoder, u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderBeginPipelineStatisticsQuery = ?fn (WGPURenderPassEncoder, WGPUQuerySet, u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderDraw = ?fn (WGPURenderPassEncoder, u32, u32, u32, u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderDrawIndexed = ?fn (WGPURenderPassEncoder, u32, u32, u32, i32, u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderDrawIndexedIndirect = ?fn (WGPURenderPassEncoder, WGPUBuffer, u64) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderDrawIndirect = ?fn (WGPURenderPassEncoder, WGPUBuffer, u64) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderEndOcclusionQuery = ?fn (WGPURenderPassEncoder) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderEndPass = ?fn (WGPURenderPassEncoder) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderEndPipelineStatisticsQuery = ?fn (WGPURenderPassEncoder) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderExecuteBundles = ?fn (WGPURenderPassEncoder, u32, [*c]const WGPURenderBundle) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderInsertDebugMarker = ?fn (WGPURenderPassEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderPopDebugGroup = ?fn (WGPURenderPassEncoder) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderPushDebugGroup = ?fn (WGPURenderPassEncoder, [*c]const u8) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetBindGroup = ?fn (WGPURenderPassEncoder, u32, WGPUBindGroup, u32, [*c]const u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetBlendConstant = ?fn (WGPURenderPassEncoder, [*c]const WGPUColor) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetIndexBuffer = ?fn (WGPURenderPassEncoder, WGPUBuffer, WGPUIndexFormat, u64, u64) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetPipeline = ?fn (WGPURenderPassEncoder, WGPURenderPipeline) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetScissorRect = ?fn (WGPURenderPassEncoder, u32, u32, u32, u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetStencilReference = ?fn (WGPURenderPassEncoder, u32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetVertexBuffer = ?fn (WGPURenderPassEncoder, u32, WGPUBuffer, u64, u64) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderSetViewport = ?fn (WGPURenderPassEncoder, f32, f32, f32, f32, f32, f32) callconv(.C) void;
-pub const WGPUProcRenderPassEncoderWriteTimestamp = ?fn (WGPURenderPassEncoder, WGPUQuerySet, u32) callconv(.C) void;
-pub const WGPUProcRenderPipelineGetBindGroupLayout = ?fn (WGPURenderPipeline, u32) callconv(.C) WGPUBindGroupLayout;
-pub const WGPUProcRenderPipelineSetLabel = ?fn (WGPURenderPipeline, [*c]const u8) callconv(.C) void;
-pub const WGPUProcShaderModuleSetLabel = ?fn (WGPUShaderModule, [*c]const u8) callconv(.C) void;
-pub const WGPUProcSurfaceGetPreferredFormat = ?fn (WGPUSurface, WGPUAdapter) callconv(.C) WGPUTextureFormat;
-pub const WGPUProcSwapChainGetCurrentTextureView = ?fn (WGPUSwapChain) callconv(.C) WGPUTextureView;
-pub const WGPUProcSwapChainPresent = ?fn (WGPUSwapChain) callconv(.C) void;
-pub const WGPUProcTextureCreateView = ?fn (WGPUTexture, [*c]const WGPUTextureViewDescriptor) callconv(.C) WGPUTextureView;
-pub const WGPUProcTextureDestroy = ?fn (WGPUTexture) callconv(.C) void;
-pub extern fn wgpuCreateInstance(descriptor: [*c]const WGPUInstanceDescriptor) WGPUInstance;
-pub extern fn wgpuGetProcAddress(device: WGPUDevice, procName: [*c]const u8) WGPUProc;
-pub extern fn wgpuAdapterGetLimits(adapter: WGPUAdapter, limits: [*c]WGPUSupportedLimits) bool;
-pub extern fn wgpuAdapterGetProperties(adapter: WGPUAdapter, properties: [*c]WGPUAdapterProperties) void;
-pub extern fn wgpuAdapterHasFeature(adapter: WGPUAdapter, feature: WGPUFeatureName) bool;
-pub extern fn wgpuAdapterRequestDevice(adapter: WGPUAdapter, descriptor: *const WGPUDeviceDescriptor, callback: WGPURequestDeviceCallback, userdata: *c_void) void;
-pub extern fn wgpuBufferDestroy(buffer: WGPUBuffer) void;
-pub extern fn wgpuBufferGetConstMappedRange(buffer: WGPUBuffer, offset: usize, size: usize) ?*const c_void;
-pub extern fn wgpuBufferGetMappedRange(buffer: WGPUBuffer, offset: usize, size: usize) ?*c_void;
-pub extern fn wgpuBufferMapAsync(buffer: WGPUBuffer, mode: WGPUMapModeFlags, offset: usize, size: usize, callback: WGPUBufferMapCallback, userdata: ?*c_void) void;
-pub extern fn wgpuBufferUnmap(buffer: WGPUBuffer) void;
-pub extern fn wgpuCommandEncoderBeginComputePass(commandEncoder: WGPUCommandEncoder, descriptor: [*c]const WGPUComputePassDescriptor) WGPUComputePassEncoder;
-pub extern fn wgpuCommandEncoderBeginRenderPass(commandEncoder: WGPUCommandEncoder, descriptor: *const WGPURenderPassDescriptor) WGPURenderPassEncoder;
-pub extern fn wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: WGPUCommandEncoder, source: WGPUBuffer, sourceOffset: u64, destination: WGPUBuffer, destinationOffset: u64, size: u64) void;
-pub extern fn wgpuCommandEncoderCopyBufferToTexture(commandEncoder: WGPUCommandEncoder, source: [*c]const WGPUImageCopyBuffer, destination: [*c]const WGPUImageCopyTexture, copySize: [*c]const WGPUExtent3D) void;
-pub extern fn wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: WGPUCommandEncoder, source: [*c]const WGPUImageCopyTexture, destination: [*c]const WGPUImageCopyBuffer, copySize: [*c]const WGPUExtent3D) void;
-pub extern fn wgpuCommandEncoderCopyTextureToTexture(commandEncoder: WGPUCommandEncoder, source: [*c]const WGPUImageCopyTexture, destination: [*c]const WGPUImageCopyTexture, copySize: [*c]const WGPUExtent3D) void;
-pub extern fn wgpuCommandEncoderFinish(commandEncoder: WGPUCommandEncoder, descriptor: *const WGPUCommandBufferDescriptor) WGPUCommandBuffer;
-pub extern fn wgpuCommandEncoderInsertDebugMarker(commandEncoder: WGPUCommandEncoder, markerLabel: [*c]const u8) void;
-pub extern fn wgpuCommandEncoderPopDebugGroup(commandEncoder: WGPUCommandEncoder) void;
-pub extern fn wgpuCommandEncoderPushDebugGroup(commandEncoder: WGPUCommandEncoder, groupLabel: [*c]const u8) void;
-pub extern fn wgpuCommandEncoderResolveQuerySet(commandEncoder: WGPUCommandEncoder, querySet: WGPUQuerySet, firstQuery: u32, queryCount: u32, destination: WGPUBuffer, destinationOffset: u64) void;
-pub extern fn wgpuCommandEncoderWriteTimestamp(commandEncoder: WGPUCommandEncoder, querySet: WGPUQuerySet, queryIndex: u32) void;
-pub extern fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder, querySet: WGPUQuerySet, queryIndex: u32) void;
-pub extern fn wgpuComputePassEncoderDispatch(computePassEncoder: WGPUComputePassEncoder, x: u32, y: u32, z: u32) void;
-pub extern fn wgpuComputePassEncoderDispatchIndirect(computePassEncoder: WGPUComputePassEncoder, indirectBuffer: WGPUBuffer, indirectOffset: u64) void;
-pub extern fn wgpuComputePassEncoderEndPass(computePassEncoder: WGPUComputePassEncoder) void;
-pub extern fn wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: WGPUComputePassEncoder) void;
-pub extern fn wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: WGPUComputePassEncoder, markerLabel: [*c]const u8) void;
-pub extern fn wgpuComputePassEncoderPopDebugGroup(computePassEncoder: WGPUComputePassEncoder) void;
-pub extern fn wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputePassEncoder, groupLabel: [*c]const u8) void;
-pub extern fn wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder, groupIndex: u32, group: WGPUBindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
-pub extern fn wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder, pipeline: WGPUComputePipeline) void;
-pub extern fn wgpuComputePassEncoderWriteTimestamp(computePassEncoder: WGPUComputePassEncoder, querySet: WGPUQuerySet, queryIndex: u32) void;
-pub extern fn wgpuComputePipelineGetBindGroupLayout(computePipeline: WGPUComputePipeline, groupIndex: u32) WGPUBindGroupLayout;
-pub extern fn wgpuComputePipelineSetLabel(computePipeline: WGPUComputePipeline, label: [*c]const u8) void;
-pub extern fn wgpuDeviceCreateBindGroup(device: WGPUDevice, descriptor: [*c]const WGPUBindGroupDescriptor) WGPUBindGroup;
-pub extern fn wgpuDeviceCreateBindGroupLayout(device: WGPUDevice, descriptor: [*c]const WGPUBindGroupLayoutDescriptor) WGPUBindGroupLayout;
-pub extern fn wgpuDeviceCreateBuffer(device: WGPUDevice, descriptor: [*c]const WGPUBufferDescriptor) WGPUBuffer;
-pub extern fn wgpuDeviceCreateCommandEncoder(device: WGPUDevice, descriptor: *const WGPUCommandEncoderDescriptor) WGPUCommandEncoder;
-pub extern fn wgpuDeviceCreateComputePipeline(device: WGPUDevice, descriptor: [*c]const WGPUComputePipelineDescriptor) WGPUComputePipeline;
-pub extern fn wgpuDeviceCreateComputePipelineAsync(device: WGPUDevice, descriptor: [*c]const WGPUComputePipelineDescriptor, callback: WGPUCreateComputePipelineAsyncCallback, userdata: ?*c_void) void;
-pub extern fn wgpuDeviceCreatePipelineLayout(device: WGPUDevice, descriptor: *const WGPUPipelineLayoutDescriptor) WGPUPipelineLayout;
-pub extern fn wgpuDeviceCreateQuerySet(device: WGPUDevice, descriptor: [*c]const WGPUQuerySetDescriptor) WGPUQuerySet;
-pub extern fn wgpuDeviceCreateRenderBundleEncoder(device: WGPUDevice, descriptor: [*c]const WGPURenderBundleEncoderDescriptor) WGPURenderBundleEncoder;
-pub extern fn wgpuDeviceCreateRenderPipeline(device: WGPUDevice, descriptor: *const WGPURenderPipelineDescriptor) WGPURenderPipeline;
-pub extern fn wgpuDeviceCreateRenderPipelineAsync(device: WGPUDevice, descriptor: [*c]const WGPURenderPipelineDescriptor, callback: WGPUCreateRenderPipelineAsyncCallback, userdata: ?*c_void) void;
-pub extern fn wgpuDeviceCreateSampler(device: WGPUDevice, descriptor: [*c]const WGPUSamplerDescriptor) WGPUSampler;
-pub extern fn wgpuDeviceCreateShaderModule(device: WGPUDevice, descriptor: *const WGPUShaderModuleDescriptor) WGPUShaderModule;
-pub extern fn wgpuDeviceCreateSwapChain(device: WGPUDevice, surface: WGPUSurface, descriptor: *const WGPUSwapChainDescriptor) WGPUSwapChain;
-pub extern fn wgpuDeviceCreateTexture(device: WGPUDevice, descriptor: [*c]const WGPUTextureDescriptor) WGPUTexture;
-pub extern fn wgpuDeviceDestroy(device: WGPUDevice) void;
-pub extern fn wgpuDeviceGetLimits(device: WGPUDevice, limits: [*c]WGPUSupportedLimits) bool;
-pub extern fn wgpuDeviceGetQueue(device: WGPUDevice) WGPUQueue;
-pub extern fn wgpuDevicePopErrorScope(device: WGPUDevice, callback: WGPUErrorCallback, userdata: ?*c_void) bool;
-pub extern fn wgpuDevicePushErrorScope(device: WGPUDevice, filter: WGPUErrorFilter) void;
-pub extern fn wgpuDeviceSetDeviceLostCallback(device: WGPUDevice, callback: WGPUDeviceLostCallback, userdata: ?*c_void) void;
-pub extern fn wgpuDeviceSetUncapturedErrorCallback(device: WGPUDevice, callback: WGPUErrorCallback, userdata: ?*c_void) void;
-pub extern fn wgpuInstanceCreateSurface(instance: WGPUInstance, descriptor: *const WGPUSurfaceDescriptor) WGPUSurface;
-pub extern fn wgpuInstanceProcessEvents(instance: WGPUInstance) void;
-pub extern fn wgpuInstanceRequestAdapter(instance: WGPUInstance, options: ?*const WGPURequestAdapterOptions, callback: WGPURequestAdapterCallback, userdata: ?*c_void) void;
-pub extern fn wgpuQuerySetDestroy(querySet: WGPUQuerySet) void;
-pub extern fn wgpuQueueOnSubmittedWorkDone(queue: WGPUQueue, signalValue: u64, callback: WGPUQueueWorkDoneCallback, userdata: ?*c_void) void;
-pub extern fn wgpuQueueSubmit(queue: WGPUQueue, commandCount: u32, commands: [*]const WGPUCommandBuffer) void;
-pub extern fn wgpuQueueWriteBuffer(queue: WGPUQueue, buffer: WGPUBuffer, bufferOffset: u64, data: ?*const c_void, size: usize) void;
-pub extern fn wgpuQueueWriteTexture(queue: WGPUQueue, destination: [*c]const WGPUImageCopyTexture, data: ?*const c_void, dataSize: usize, dataLayout: [*c]const WGPUTextureDataLayout, writeSize: [*c]const WGPUExtent3D) void;
-pub extern fn wgpuRenderBundleEncoderDraw(renderBundleEncoder: WGPURenderBundleEncoder, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) void;
-pub extern fn wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: WGPURenderBundleEncoder, indexCount: u32, instanceCount: u32, firstIndex: u32, baseVertex: i32, firstInstance: u32) void;
-pub extern fn wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: WGPURenderBundleEncoder, indirectBuffer: WGPUBuffer, indirectOffset: u64) void;
-pub extern fn wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: WGPURenderBundleEncoder, indirectBuffer: WGPUBuffer, indirectOffset: u64) void;
-pub extern fn wgpuRenderBundleEncoderFinish(renderBundleEncoder: WGPURenderBundleEncoder, descriptor: [*c]const WGPURenderBundleDescriptor) WGPURenderBundle;
-pub extern fn wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: WGPURenderBundleEncoder, markerLabel: [*c]const u8) void;
-pub extern fn wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder) void;
-pub extern fn wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURenderBundleEncoder, groupLabel: [*c]const u8) void;
-pub extern fn wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder, groupIndex: u32, group: WGPUBindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
-pub extern fn wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder, buffer: WGPUBuffer, format: WGPUIndexFormat, offset: u64, size: u64) void;
-pub extern fn wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: WGPURenderBundleEncoder, pipeline: WGPURenderPipeline) void;
-pub extern fn wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: WGPURenderBundleEncoder, slot: u32, buffer: WGPUBuffer, offset: u64, size: u64) void;
-pub extern fn wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder, queryIndex: u32) void;
-pub extern fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder, querySet: WGPUQuerySet, queryIndex: u32) void;
-pub extern fn wgpuRenderPassEncoderDraw(renderPassEncoder: WGPURenderPassEncoder, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) void;
-pub extern fn wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: WGPURenderPassEncoder, indexCount: u32, instanceCount: u32, firstIndex: u32, baseVertex: i32, firstInstance: u32) void;
-pub extern fn wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: WGPURenderPassEncoder, indirectBuffer: WGPUBuffer, indirectOffset: u64) void;
-pub extern fn wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: WGPURenderPassEncoder, indirectBuffer: WGPUBuffer, indirectOffset: u64) void;
-pub extern fn wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: WGPURenderPassEncoder) void;
-pub extern fn wgpuRenderPassEncoderEndPass(renderPassEncoder: WGPURenderPassEncoder) void;
-pub extern fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: WGPURenderPassEncoder) void;
-pub extern fn wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: WGPURenderPassEncoder, bundlesCount: u32, bundles: [*c]const WGPURenderBundle) void;
-pub extern fn wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: WGPURenderPassEncoder, markerLabel: [*c]const u8) void;
-pub extern fn wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: WGPURenderPassEncoder) void;
-pub extern fn wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: WGPURenderPassEncoder, groupLabel: [*c]const u8) void;
-pub extern fn wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEncoder, groupIndex: u32, group: WGPUBindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
-pub extern fn wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder, color: [*c]const WGPUColor) void;
-pub extern fn wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder, buffer: WGPUBuffer, format: WGPUIndexFormat, offset: u64, size: u64) void;
-pub extern fn wgpuRenderPassEncoderSetPipeline(renderPassEncoder: WGPURenderPassEncoder, pipeline: WGPURenderPipeline) void;
-pub extern fn wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: WGPURenderPassEncoder, x: u32, y: u32, width: u32, height: u32) void;
-pub extern fn wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: WGPURenderPassEncoder, reference: u32) void;
-pub extern fn wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: WGPURenderPassEncoder, slot: u32, buffer: WGPUBuffer, offset: u64, size: u64) void;
-pub extern fn wgpuRenderPassEncoderSetViewport(renderPassEncoder: WGPURenderPassEncoder, x: f32, y: f32, width: f32, height: f32, minDepth: f32, maxDepth: f32) void;
-pub extern fn wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPassEncoder, querySet: WGPUQuerySet, queryIndex: u32) void;
-pub extern fn wgpuRenderPipelineGetBindGroupLayout(renderPipeline: WGPURenderPipeline, groupIndex: u32) WGPUBindGroupLayout;
-pub extern fn wgpuRenderPipelineSetLabel(renderPipeline: WGPURenderPipeline, label: [*c]const u8) void;
-pub extern fn wgpuShaderModuleSetLabel(shaderModule: WGPUShaderModule, label: [*c]const u8) void;
-pub extern fn wgpuSurfaceGetPreferredFormat(surface: WGPUSurface, adapter: WGPUAdapter) WGPUTextureFormat;
-pub extern fn wgpuSwapChainGetCurrentTextureView(swapChain: WGPUSwapChain) WGPUTextureView;
-pub extern fn wgpuSwapChainPresent(swapChain: WGPUSwapChain) void;
-pub extern fn wgpuTextureCreateView(texture: WGPUTexture, descriptor: [*c]const WGPUTextureViewDescriptor) WGPUTextureView;
-pub extern fn wgpuTextureDestroy(texture: WGPUTexture) void;
+pub const BufferMapCallback = ?fn (BufferMapAsyncStatus, ?*c_void) callconv(.C) void;
+pub const CreateComputePipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, ComputePipeline, [*c]const u8, ?*c_void) callconv(.C) void;
+pub const CreateRenderPipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, RenderPipeline, [*c]const u8, ?*c_void) callconv(.C) void;
+pub const DeviceLostCallback = ?fn (DeviceLostReason, [*c]const u8, ?*c_void) callconv(.C) void;
+pub const ErrorCallback = ?fn (ErrorType, [*c]const u8, ?*c_void) callconv(.C) void;
+pub const QueueWorkDoneCallback = ?fn (QueueWorkDoneStatus, ?*c_void) callconv(.C) void;
+pub const RequestAdapterCallback = fn (RequestAdapterStatus, Adapter, [*:0]const u8, *c_void) callconv(.C) void;
+pub const RequestDeviceCallback = fn (RequestDeviceStatus, Device, [*:0]const u8, *c_void) callconv(.C) void;
+pub const Proc = ?fn () callconv(.C) void;
+pub const ProcCreateInstance = ?fn ([*c]const InstanceDescriptor) callconv(.C) Instance;
+pub const ProcGetProcAddress = ?fn (Device, [*c]const u8) callconv(.C) Proc;
+pub const ProcAdapterGetLimits = ?fn (Adapter, [*c]SupportedLimits) callconv(.C) bool;
+pub const ProcAdapterGetProperties = ?fn (Adapter, [*c]AdapterProperties) callconv(.C) void;
+pub const ProcAdapterHasFeature = ?fn (Adapter, FeatureName) callconv(.C) bool;
+pub const ProcAdapterRequestDevice = ?fn (Adapter, [*c]const DeviceDescriptor, RequestDeviceCallback, ?*c_void) callconv(.C) void;
+pub const ProcBufferDestroy = ?fn (Buffer) callconv(.C) void;
+pub const ProcBufferGetConstMappedRange = ?fn (Buffer, usize, usize) callconv(.C) ?*const c_void;
+pub const ProcBufferGetMappedRange = ?fn (Buffer, usize, usize) callconv(.C) ?*c_void;
+pub const ProcBufferMapAsync = ?fn (Buffer, MapModeFlags, usize, usize, BufferMapCallback, ?*c_void) callconv(.C) void;
+pub const ProcBufferUnmap = ?fn (Buffer) callconv(.C) void;
+pub const ProcCommandEncoderBeginComputePass = ?fn (CommandEncoder, [*c]const ComputePassDescriptor) callconv(.C) ComputePassEncoder;
+pub const ProcCommandEncoderBeginRenderPass = ?fn (CommandEncoder, [*c]const RenderPassDescriptor) callconv(.C) RenderPassEncoder;
+pub const ProcCommandEncoderCopyBufferToBuffer = ?fn (CommandEncoder, Buffer, u64, Buffer, u64, u64) callconv(.C) void;
+pub const ProcCommandEncoderCopyBufferToTexture = ?fn (CommandEncoder, [*c]const ImageCopyBuffer, [*c]const ImageCopyTexture, [*c]const Extent3D) callconv(.C) void;
+pub const ProcCommandEncoderCopyTextureToBuffer = ?fn (CommandEncoder, [*c]const ImageCopyTexture, [*c]const ImageCopyBuffer, [*c]const Extent3D) callconv(.C) void;
+pub const ProcCommandEncoderCopyTextureToTexture = ?fn (CommandEncoder, [*c]const ImageCopyTexture, [*c]const ImageCopyTexture, [*c]const Extent3D) callconv(.C) void;
+pub const ProcCommandEncoderFinish = ?fn (CommandEncoder, [*c]const CommandBufferDescriptor) callconv(.C) CommandBuffer;
+pub const ProcCommandEncoderInsertDebugMarker = ?fn (CommandEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcCommandEncoderPopDebugGroup = ?fn (CommandEncoder) callconv(.C) void;
+pub const ProcCommandEncoderPushDebugGroup = ?fn (CommandEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcCommandEncoderResolveQuerySet = ?fn (CommandEncoder, QuerySet, u32, u32, Buffer, u64) callconv(.C) void;
+pub const ProcCommandEncoderWriteTimestamp = ?fn (CommandEncoder, QuerySet, u32) callconv(.C) void;
+pub const ProcComputePassEncoderBeginPipelineStatisticsQuery = ?fn (ComputePassEncoder, QuerySet, u32) callconv(.C) void;
+pub const ProcComputePassEncoderDispatch = ?fn (ComputePassEncoder, u32, u32, u32) callconv(.C) void;
+pub const ProcComputePassEncoderDispatchIndirect = ?fn (ComputePassEncoder, Buffer, u64) callconv(.C) void;
+pub const ProcComputePassEncoderEndPass = ?fn (ComputePassEncoder) callconv(.C) void;
+pub const ProcComputePassEncoderEndPipelineStatisticsQuery = ?fn (ComputePassEncoder) callconv(.C) void;
+pub const ProcComputePassEncoderInsertDebugMarker = ?fn (ComputePassEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcComputePassEncoderPopDebugGroup = ?fn (ComputePassEncoder) callconv(.C) void;
+pub const ProcComputePassEncoderPushDebugGroup = ?fn (ComputePassEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcComputePassEncoderSetBindGroup = ?fn (ComputePassEncoder, u32, BindGroup, u32, [*c]const u32) callconv(.C) void;
+pub const ProcComputePassEncoderSetPipeline = ?fn (ComputePassEncoder, ComputePipeline) callconv(.C) void;
+pub const ProcComputePassEncoderWriteTimestamp = ?fn (ComputePassEncoder, QuerySet, u32) callconv(.C) void;
+pub const ProcComputePipelineGetBindGroupLayout = ?fn (ComputePipeline, u32) callconv(.C) BindGroupLayout;
+pub const ProcComputePipelineSetLabel = ?fn (ComputePipeline, [*c]const u8) callconv(.C) void;
+pub const ProcDeviceCreateBindGroup = ?fn (Device, [*c]const BindGroupDescriptor) callconv(.C) BindGroup;
+pub const ProcDeviceCreateBindGroupLayout = ?fn (Device, [*c]const BindGroupLayoutDescriptor) callconv(.C) BindGroupLayout;
+pub const ProcDeviceCreateBuffer = ?fn (Device, [*c]const BufferDescriptor) callconv(.C) Buffer;
+pub const ProcDeviceCreateCommandEncoder = ?fn (Device, [*c]const CommandEncoderDescriptor) callconv(.C) CommandEncoder;
+pub const ProcDeviceCreateComputePipeline = ?fn (Device, [*c]const ComputePipelineDescriptor) callconv(.C) ComputePipeline;
+pub const ProcDeviceCreateComputePipelineAsync = ?fn (Device, [*c]const ComputePipelineDescriptor, CreateComputePipelineAsyncCallback, ?*c_void) callconv(.C) void;
+pub const ProcDeviceCreatePipelineLayout = ?fn (Device, [*c]const PipelineLayoutDescriptor) callconv(.C) PipelineLayout;
+pub const ProcDeviceCreateQuerySet = ?fn (Device, [*c]const QuerySetDescriptor) callconv(.C) QuerySet;
+pub const ProcDeviceCreateRenderBundleEncoder = ?fn (Device, [*c]const RenderBundleEncoderDescriptor) callconv(.C) RenderBundleEncoder;
+pub const ProcDeviceCreateRenderPipeline = ?fn (Device, [*c]const RenderPipelineDescriptor) callconv(.C) RenderPipeline;
+pub const ProcDeviceCreateRenderPipelineAsync = ?fn (Device, [*c]const RenderPipelineDescriptor, CreateRenderPipelineAsyncCallback, ?*c_void) callconv(.C) void;
+pub const ProcDeviceCreateSampler = ?fn (Device, [*c]const SamplerDescriptor) callconv(.C) Sampler;
+pub const ProcDeviceCreateShaderModule = ?fn (Device, [*c]const ShaderModuleDescriptor) callconv(.C) ShaderModule;
+pub const ProcDeviceCreateSwapChain = ?fn (Device, Surface, [*c]const SwapChainDescriptor) callconv(.C) SwapChain;
+pub const ProcDeviceCreateTexture = ?fn (Device, [*c]const TextureDescriptor) callconv(.C) Texture;
+pub const ProcDeviceDestroy = ?fn (Device) callconv(.C) void;
+pub const ProcDeviceGetLimits = ?fn (Device, [*c]SupportedLimits) callconv(.C) bool;
+pub const ProcDeviceGetQueue = ?fn (Device) callconv(.C) Queue;
+pub const ProcDevicePopErrorScope = ?fn (Device, ErrorCallback, ?*c_void) callconv(.C) bool;
+pub const ProcDevicePushErrorScope = ?fn (Device, ErrorFilter) callconv(.C) void;
+pub const ProcDeviceSetDeviceLostCallback = ?fn (Device, DeviceLostCallback, ?*c_void) callconv(.C) void;
+pub const ProcDeviceSetUncapturedErrorCallback = ?fn (Device, ErrorCallback, ?*c_void) callconv(.C) void;
+pub const ProcInstanceCreateSurface = ?fn (Instance, [*c]const SurfaceDescriptor) callconv(.C) Surface;
+pub const ProcInstanceProcessEvents = ?fn (Instance) callconv(.C) void;
+pub const ProcInstanceRequestAdapter = ?fn (Instance, [*c]const RequestAdapterOptions, RequestAdapterCallback, ?*c_void) callconv(.C) void;
+pub const ProcQuerySetDestroy = ?fn (QuerySet) callconv(.C) void;
+pub const ProcQueueOnSubmittedWorkDone = ?fn (Queue, u64, QueueWorkDoneCallback, ?*c_void) callconv(.C) void;
+pub const ProcQueueSubmit = ?fn (Queue, u32, [*c]const CommandBuffer) callconv(.C) void;
+pub const ProcQueueWriteBuffer = ?fn (Queue, Buffer, u64, ?*const c_void, usize) callconv(.C) void;
+pub const ProcQueueWriteTexture = ?fn (Queue, [*c]const ImageCopyTexture, ?*const c_void, usize, [*c]const TextureDataLayout, [*c]const Extent3D) callconv(.C) void;
+pub const ProcRenderBundleEncoderDraw = ?fn (RenderBundleEncoder, u32, u32, u32, u32) callconv(.C) void;
+pub const ProcRenderBundleEncoderDrawIndexed = ?fn (RenderBundleEncoder, u32, u32, u32, i32, u32) callconv(.C) void;
+pub const ProcRenderBundleEncoderDrawIndexedIndirect = ?fn (RenderBundleEncoder, Buffer, u64) callconv(.C) void;
+pub const ProcRenderBundleEncoderDrawIndirect = ?fn (RenderBundleEncoder, Buffer, u64) callconv(.C) void;
+pub const ProcRenderBundleEncoderFinish = ?fn (RenderBundleEncoder, [*c]const RenderBundleDescriptor) callconv(.C) RenderBundle;
+pub const ProcRenderBundleEncoderInsertDebugMarker = ?fn (RenderBundleEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcRenderBundleEncoderPopDebugGroup = ?fn (RenderBundleEncoder) callconv(.C) void;
+pub const ProcRenderBundleEncoderPushDebugGroup = ?fn (RenderBundleEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcRenderBundleEncoderSetBindGroup = ?fn (RenderBundleEncoder, u32, BindGroup, u32, [*c]const u32) callconv(.C) void;
+pub const ProcRenderBundleEncoderSetIndexBuffer = ?fn (RenderBundleEncoder, Buffer, IndexFormat, u64, u64) callconv(.C) void;
+pub const ProcRenderBundleEncoderSetPipeline = ?fn (RenderBundleEncoder, RenderPipeline) callconv(.C) void;
+pub const ProcRenderBundleEncoderSetVertexBuffer = ?fn (RenderBundleEncoder, u32, Buffer, u64, u64) callconv(.C) void;
+pub const ProcRenderPassEncoderBeginOcclusionQuery = ?fn (RenderPassEncoder, u32) callconv(.C) void;
+pub const ProcRenderPassEncoderBeginPipelineStatisticsQuery = ?fn (RenderPassEncoder, QuerySet, u32) callconv(.C) void;
+pub const ProcRenderPassEncoderDraw = ?fn (RenderPassEncoder, u32, u32, u32, u32) callconv(.C) void;
+pub const ProcRenderPassEncoderDrawIndexed = ?fn (RenderPassEncoder, u32, u32, u32, i32, u32) callconv(.C) void;
+pub const ProcRenderPassEncoderDrawIndexedIndirect = ?fn (RenderPassEncoder, Buffer, u64) callconv(.C) void;
+pub const ProcRenderPassEncoderDrawIndirect = ?fn (RenderPassEncoder, Buffer, u64) callconv(.C) void;
+pub const ProcRenderPassEncoderEndOcclusionQuery = ?fn (RenderPassEncoder) callconv(.C) void;
+pub const ProcRenderPassEncoderEndPass = ?fn (RenderPassEncoder) callconv(.C) void;
+pub const ProcRenderPassEncoderEndPipelineStatisticsQuery = ?fn (RenderPassEncoder) callconv(.C) void;
+pub const ProcRenderPassEncoderExecuteBundles = ?fn (RenderPassEncoder, u32, [*c]const RenderBundle) callconv(.C) void;
+pub const ProcRenderPassEncoderInsertDebugMarker = ?fn (RenderPassEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcRenderPassEncoderPopDebugGroup = ?fn (RenderPassEncoder) callconv(.C) void;
+pub const ProcRenderPassEncoderPushDebugGroup = ?fn (RenderPassEncoder, [*c]const u8) callconv(.C) void;
+pub const ProcRenderPassEncoderSetBindGroup = ?fn (RenderPassEncoder, u32, BindGroup, u32, [*c]const u32) callconv(.C) void;
+pub const ProcRenderPassEncoderSetBlendConstant = ?fn (RenderPassEncoder, [*c]const Color) callconv(.C) void;
+pub const ProcRenderPassEncoderSetIndexBuffer = ?fn (RenderPassEncoder, Buffer, IndexFormat, u64, u64) callconv(.C) void;
+pub const ProcRenderPassEncoderSetPipeline = ?fn (RenderPassEncoder, RenderPipeline) callconv(.C) void;
+pub const ProcRenderPassEncoderSetScissorRect = ?fn (RenderPassEncoder, u32, u32, u32, u32) callconv(.C) void;
+pub const ProcRenderPassEncoderSetStencilReference = ?fn (RenderPassEncoder, u32) callconv(.C) void;
+pub const ProcRenderPassEncoderSetVertexBuffer = ?fn (RenderPassEncoder, u32, Buffer, u64, u64) callconv(.C) void;
+pub const ProcRenderPassEncoderSetViewport = ?fn (RenderPassEncoder, f32, f32, f32, f32, f32, f32) callconv(.C) void;
+pub const ProcRenderPassEncoderWriteTimestamp = ?fn (RenderPassEncoder, QuerySet, u32) callconv(.C) void;
+pub const ProcRenderPipelineGetBindGroupLayout = ?fn (RenderPipeline, u32) callconv(.C) BindGroupLayout;
+pub const ProcRenderPipelineSetLabel = ?fn (RenderPipeline, [*c]const u8) callconv(.C) void;
+pub const ProcShaderModuleSetLabel = ?fn (ShaderModule, [*c]const u8) callconv(.C) void;
+pub const ProcSurfaceGetPreferredFormat = ?fn (Surface, Adapter) callconv(.C) TextureFormat;
+pub const ProcSwapChainGetCurrentTextureView = ?fn (SwapChain) callconv(.C) TextureView;
+pub const ProcSwapChainPresent = ?fn (SwapChain) callconv(.C) void;
+pub const ProcTextureCreateView = ?fn (Texture, [*c]const TextureViewDescriptor) callconv(.C) TextureView;
+pub const ProcTextureDestroy = ?fn (Texture) callconv(.C) void;
+pub extern fn wgpuCreateInstance(descriptor: [*c]const InstanceDescriptor) Instance;
+pub extern fn wgpuGetProcAddress(device: Device, procName: [*c]const u8) Proc;
+pub extern fn wgpuAdapterGetLimits(adapter: Adapter, limits: [*c]SupportedLimits) bool;
+pub extern fn wgpuAdapterGetProperties(adapter: Adapter, properties: *AdapterProperties) void;
+pub extern fn wgpuAdapterHasFeature(adapter: Adapter, feature: FeatureName) bool;
+pub extern fn wgpuAdapterRequestDevice(adapter: Adapter, descriptor: *const DeviceDescriptor, callback: RequestDeviceCallback, userdata: *c_void) void;
+pub extern fn wgpuBufferDestroy(buffer: Buffer) void;
+pub extern fn wgpuBufferGetConstMappedRange(buffer: Buffer, offset: usize, size: usize) ?*const c_void;
+pub extern fn wgpuBufferGetMappedRange(buffer: Buffer, offset: usize, size: usize) ?*c_void;
+pub extern fn wgpuBufferMapAsync(buffer: Buffer, mode: MapModeFlags, offset: usize, size: usize, callback: BufferMapCallback, userdata: ?*c_void) void;
+pub extern fn wgpuBufferUnmap(buffer: Buffer) void;
+pub extern fn wgpuCommandEncoderBeginComputePass(commandEncoder: CommandEncoder, descriptor: [*c]const ComputePassDescriptor) ComputePassEncoder;
+pub extern fn wgpuCommandEncoderBeginRenderPass(commandEncoder: CommandEncoder, descriptor: *const RenderPassDescriptor) RenderPassEncoder;
+pub extern fn wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: CommandEncoder, source: Buffer, sourceOffset: u64, destination: Buffer, destinationOffset: u64, size: u64) void;
+pub extern fn wgpuCommandEncoderCopyBufferToTexture(commandEncoder: CommandEncoder, source: [*c]const ImageCopyBuffer, destination: [*c]const ImageCopyTexture, copySize: [*c]const Extent3D) void;
+pub extern fn wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: CommandEncoder, source: [*c]const ImageCopyTexture, destination: [*c]const ImageCopyBuffer, copySize: [*c]const Extent3D) void;
+pub extern fn wgpuCommandEncoderCopyTextureToTexture(commandEncoder: CommandEncoder, source: [*c]const ImageCopyTexture, destination: [*c]const ImageCopyTexture, copySize: [*c]const Extent3D) void;
+pub extern fn wgpuCommandEncoderFinish(commandEncoder: CommandEncoder, descriptor: *const CommandBufferDescriptor) CommandBuffer;
+pub extern fn wgpuCommandEncoderInsertDebugMarker(commandEncoder: CommandEncoder, markerLabel: [*c]const u8) void;
+pub extern fn wgpuCommandEncoderPopDebugGroup(commandEncoder: CommandEncoder) void;
+pub extern fn wgpuCommandEncoderPushDebugGroup(commandEncoder: CommandEncoder, groupLabel: [*c]const u8) void;
+pub extern fn wgpuCommandEncoderResolveQuerySet(commandEncoder: CommandEncoder, querySet: QuerySet, firstQuery: u32, queryCount: u32, destination: Buffer, destinationOffset: u64) void;
+pub extern fn wgpuCommandEncoderWriteTimestamp(commandEncoder: CommandEncoder, querySet: QuerySet, queryIndex: u32) void;
+pub extern fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: ComputePassEncoder, querySet: QuerySet, queryIndex: u32) void;
+pub extern fn wgpuComputePassEncoderDispatch(computePassEncoder: ComputePassEncoder, x: u32, y: u32, z: u32) void;
+pub extern fn wgpuComputePassEncoderDispatchIndirect(computePassEncoder: ComputePassEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
+pub extern fn wgpuComputePassEncoderEndPass(computePassEncoder: ComputePassEncoder) void;
+pub extern fn wgpuComputePassEncoderEndPipelineStatisticsQuery(computePassEncoder: ComputePassEncoder) void;
+pub extern fn wgpuComputePassEncoderInsertDebugMarker(computePassEncoder: ComputePassEncoder, markerLabel: [*c]const u8) void;
+pub extern fn wgpuComputePassEncoderPopDebugGroup(computePassEncoder: ComputePassEncoder) void;
+pub extern fn wgpuComputePassEncoderPushDebugGroup(computePassEncoder: ComputePassEncoder, groupLabel: [*c]const u8) void;
+pub extern fn wgpuComputePassEncoderSetBindGroup(computePassEncoder: ComputePassEncoder, groupIndex: u32, group: BindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
+pub extern fn wgpuComputePassEncoderSetPipeline(computePassEncoder: ComputePassEncoder, pipeline: ComputePipeline) void;
+pub extern fn wgpuComputePassEncoderWriteTimestamp(computePassEncoder: ComputePassEncoder, querySet: QuerySet, queryIndex: u32) void;
+pub extern fn wgpuComputePipelineGetBindGroupLayout(computePipeline: ComputePipeline, groupIndex: u32) BindGroupLayout;
+pub extern fn wgpuComputePipelineSetLabel(computePipeline: ComputePipeline, label: [*c]const u8) void;
+pub extern fn wgpuDeviceCreateBindGroup(device: Device, descriptor: [*c]const BindGroupDescriptor) BindGroup;
+pub extern fn wgpuDeviceCreateBindGroupLayout(device: Device, descriptor: [*c]const BindGroupLayoutDescriptor) BindGroupLayout;
+pub extern fn wgpuDeviceCreateBuffer(device: Device, descriptor: [*c]const BufferDescriptor) Buffer;
+pub extern fn wgpuDeviceCreateCommandEncoder(device: Device, descriptor: *const CommandEncoderDescriptor) CommandEncoder;
+pub extern fn wgpuDeviceCreateComputePipeline(device: Device, descriptor: [*c]const ComputePipelineDescriptor) ComputePipeline;
+pub extern fn wgpuDeviceCreateComputePipelineAsync(device: Device, descriptor: [*c]const ComputePipelineDescriptor, callback: CreateComputePipelineAsyncCallback, userdata: ?*c_void) void;
+pub extern fn wgpuDeviceCreatePipelineLayout(device: Device, descriptor: *const PipelineLayoutDescriptor) PipelineLayout;
+pub extern fn wgpuDeviceCreateQuerySet(device: Device, descriptor: [*c]const QuerySetDescriptor) QuerySet;
+pub extern fn wgpuDeviceCreateRenderBundleEncoder(device: Device, descriptor: [*c]const RenderBundleEncoderDescriptor) RenderBundleEncoder;
+pub extern fn wgpuDeviceCreateRenderPipeline(device: Device, descriptor: *const RenderPipelineDescriptor) RenderPipeline;
+pub extern fn wgpuDeviceCreateRenderPipelineAsync(device: Device, descriptor: [*c]const RenderPipelineDescriptor, callback: CreateRenderPipelineAsyncCallback, userdata: ?*c_void) void;
+pub extern fn wgpuDeviceCreateSampler(device: Device, descriptor: [*c]const SamplerDescriptor) Sampler;
+pub extern fn wgpuDeviceCreateShaderModule(device: Device, descriptor: *const ShaderModuleDescriptor) ShaderModule;
+pub extern fn wgpuDeviceCreateSwapChain(device: Device, surface: Surface, descriptor: *const SwapChainDescriptor) SwapChain;
+pub extern fn wgpuDeviceCreateTexture(device: Device, descriptor: [*c]const TextureDescriptor) Texture;
+pub extern fn wgpuDeviceDestroy(device: Device) void;
+pub extern fn wgpuDeviceGetLimits(device: Device, limits: [*c]SupportedLimits) bool;
+pub extern fn wgpuDeviceGetQueue(device: Device) Queue;
+pub extern fn wgpuDevicePopErrorScope(device: Device, callback: ErrorCallback, userdata: ?*c_void) bool;
+pub extern fn wgpuDevicePushErrorScope(device: Device, filter: ErrorFilter) void;
+pub extern fn wgpuDeviceSetDeviceLostCallback(device: Device, callback: DeviceLostCallback, userdata: ?*c_void) void;
+pub extern fn wgpuDeviceSetUncapturedErrorCallback(device: Device, callback: ErrorCallback, userdata: ?*c_void) void;
+pub extern fn wgpuInstanceCreateSurface(instance: Instance, descriptor: *const SurfaceDescriptor) Surface;
+pub extern fn wgpuInstanceProcessEvents(instance: Instance) void;
+pub extern fn wgpuInstanceRequestAdapter(instance: Instance, options: ?*const RequestAdapterOptions, callback: RequestAdapterCallback, userdata: ?*c_void) void;
+pub extern fn wgpuQuerySetDestroy(querySet: QuerySet) void;
+pub extern fn wgpuQueueOnSubmittedWorkDone(queue: Queue, signalValue: u64, callback: QueueWorkDoneCallback, userdata: ?*c_void) void;
+pub extern fn wgpuQueueSubmit(queue: Queue, commandCount: u32, commands: [*]const CommandBuffer) void;
+pub extern fn wgpuQueueWriteBuffer(queue: Queue, buffer: Buffer, bufferOffset: u64, data: ?*const c_void, size: usize) void;
+pub extern fn wgpuQueueWriteTexture(queue: Queue, destination: [*c]const ImageCopyTexture, data: ?*const c_void, dataSize: usize, dataLayout: [*c]const TextureDataLayout, writeSize: [*c]const Extent3D) void;
+pub extern fn wgpuRenderBundleEncoderDraw(renderBundleEncoder: RenderBundleEncoder, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) void;
+pub extern fn wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: RenderBundleEncoder, indexCount: u32, instanceCount: u32, firstIndex: u32, baseVertex: i32, firstInstance: u32) void;
+pub extern fn wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: RenderBundleEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
+pub extern fn wgpuRenderBundleEncoderDrawIndirect(renderBundleEncoder: RenderBundleEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
+pub extern fn wgpuRenderBundleEncoderFinish(renderBundleEncoder: RenderBundleEncoder, descriptor: [*c]const RenderBundleDescriptor) RenderBundle;
+pub extern fn wgpuRenderBundleEncoderInsertDebugMarker(renderBundleEncoder: RenderBundleEncoder, markerLabel: [*c]const u8) void;
+pub extern fn wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: RenderBundleEncoder) void;
+pub extern fn wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: RenderBundleEncoder, groupLabel: [*c]const u8) void;
+pub extern fn wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: RenderBundleEncoder, groupIndex: u32, group: BindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
+pub extern fn wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: RenderBundleEncoder, buffer: Buffer, format: IndexFormat, offset: u64, size: u64) void;
+pub extern fn wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: RenderBundleEncoder, pipeline: RenderPipeline) void;
+pub extern fn wgpuRenderBundleEncoderSetVertexBuffer(renderBundleEncoder: RenderBundleEncoder, slot: u32, buffer: Buffer, offset: u64, size: u64) void;
+pub extern fn wgpuRenderPassEncoderBeginOcclusionQuery(renderPassEncoder: RenderPassEncoder, queryIndex: u32) void;
+pub extern fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(renderPassEncoder: RenderPassEncoder, querySet: QuerySet, queryIndex: u32) void;
+pub extern fn wgpuRenderPassEncoderDraw(renderPassEncoder: RenderPassEncoder, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) void;
+pub extern fn wgpuRenderPassEncoderDrawIndexed(renderPassEncoder: RenderPassEncoder, indexCount: u32, instanceCount: u32, firstIndex: u32, baseVertex: i32, firstInstance: u32) void;
+pub extern fn wgpuRenderPassEncoderDrawIndexedIndirect(renderPassEncoder: RenderPassEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
+pub extern fn wgpuRenderPassEncoderDrawIndirect(renderPassEncoder: RenderPassEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
+pub extern fn wgpuRenderPassEncoderEndOcclusionQuery(renderPassEncoder: RenderPassEncoder) void;
+pub extern fn wgpuRenderPassEncoderEndPass(renderPassEncoder: RenderPassEncoder) void;
+pub extern fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(renderPassEncoder: RenderPassEncoder) void;
+pub extern fn wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: RenderPassEncoder, bundlesCount: u32, bundles: [*c]const RenderBundle) void;
+pub extern fn wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: RenderPassEncoder, markerLabel: [*c]const u8) void;
+pub extern fn wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: RenderPassEncoder) void;
+pub extern fn wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: RenderPassEncoder, groupLabel: [*c]const u8) void;
+pub extern fn wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: RenderPassEncoder, groupIndex: u32, group: BindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
+pub extern fn wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: RenderPassEncoder, color: [*c]const Color) void;
+pub extern fn wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: RenderPassEncoder, buffer: Buffer, format: IndexFormat, offset: u64, size: u64) void;
+pub extern fn wgpuRenderPassEncoderSetPipeline(renderPassEncoder: RenderPassEncoder, pipeline: RenderPipeline) void;
+pub extern fn wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: RenderPassEncoder, x: u32, y: u32, width: u32, height: u32) void;
+pub extern fn wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: RenderPassEncoder, reference: u32) void;
+pub extern fn wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: RenderPassEncoder, slot: u32, buffer: Buffer, offset: u64, size: u64) void;
+pub extern fn wgpuRenderPassEncoderSetViewport(renderPassEncoder: RenderPassEncoder, x: f32, y: f32, width: f32, height: f32, minDepth: f32, maxDepth: f32) void;
+pub extern fn wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: RenderPassEncoder, querySet: QuerySet, queryIndex: u32) void;
+pub extern fn wgpuRenderPipelineGetBindGroupLayout(renderPipeline: RenderPipeline, groupIndex: u32) BindGroupLayout;
+pub extern fn wgpuRenderPipelineSetLabel(renderPipeline: RenderPipeline, label: [*c]const u8) void;
+pub extern fn wgpuShaderModuleSetLabel(shaderModule: ShaderModule, label: [*c]const u8) void;
+pub extern fn wgpuSurfaceGetPreferredFormat(surface: Surface, adapter: Adapter) TextureFormat;
+pub extern fn wgpuSwapChainGetCurrentTextureView(swapChain: SwapChain) TextureView;
+pub extern fn wgpuSwapChainPresent(swapChain: SwapChain) void;
+pub extern fn wgpuTextureCreateView(texture: Texture, descriptor: [*c]const TextureViewDescriptor) TextureView;
+pub extern fn wgpuTextureDestroy(texture: Texture) void;
 
 // wgpu-native
-pub const WGPUNativeFeature = enum(i32) {
+pub const NativeFeature = enum(i32) {
     TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES = 268435456,
 };
 
 // wgpu-native
-pub const WGPULogLevel = enum(i32) {
+pub const LogLevel = enum(i32) {
     Off = 0,
     Error = 1,
     Warn = 2,
@@ -1161,63 +1155,63 @@ pub const WGPULogLevel = enum(i32) {
     _,
 };
 
-pub const WGPUAdapterExtras = extern struct {
-    chain: WGPUChainedStruct,
-    backend: WGPUBackendType,
+pub const AdapterExtras = extern struct {
+    chain: ChainedStruct,
+    backend: BackendType,
 };
-pub const WGPUDeviceExtras = extern struct {
-    chain: WGPUChainedStruct,
-    nativeFeatures: WGPUNativeFeature,
+pub const DeviceExtras = extern struct {
+    chain: ChainedStruct,
+    nativeFeatures: NativeFeature,
     label: [*:0]const u8,
     tracePath: ?[*:0]const u8,
 };
-pub const WGPULogCallback = ?fn (WGPULogLevel, [*c]const u8) callconv(.C) void;
-pub extern fn wgpuDevicePoll(device: WGPUDevice, force_wait: bool) void;
-pub extern fn wgpuSetLogCallback(callback: WGPULogCallback) void;
-pub extern fn wgpuSetLogLevel(level: WGPULogLevel) void;
+pub const LogCallback = ?fn (LogLevel, [*c]const u8) callconv(.C) void;
+pub extern fn wgpuDevicePoll(device: Device, force_wait: bool) void;
+pub extern fn wgpuSetLogCallback(callback: LogCallback) void;
+pub extern fn wgpuSetLogLevel(level: LogLevel) void;
 pub extern fn wgpuGetVersion() u32;
-pub extern fn wgpuRenderPassEncoderSetPushConstants(encoder: WGPURenderPassEncoder, stages: WGPUShaderStage, offset: u32, sizeBytes: u32, data: ?*c_void) void;
-pub extern fn wgpuBufferDrop(buffer: WGPUBuffer) void;
-pub extern fn wgpuCommandEncoderDrop(commandEncoder: WGPUCommandEncoder) void;
-pub extern fn wgpuDeviceDrop(device: WGPUDevice) void;
-pub extern fn wgpuQuerySetDrop(querySet: WGPUQuerySet) void;
-pub extern fn wgpuRenderPipelineDrop(renderPipeline: WGPURenderPipeline) void;
-pub extern fn wgpuTextureDrop(texture: WGPUTexture) void;
-pub extern fn wgpuTextureViewDrop(textureView: WGPUTextureView) void;
-pub extern fn wgpuSamplerDrop(sampler: WGPUSampler) void;
-pub extern fn wgpuBindGroupLayoutDrop(bindGroupLayout: WGPUBindGroupLayout) void;
-pub extern fn wgpuPipelineLayoutDrop(pipelineLayout: WGPUPipelineLayout) void;
-pub extern fn wgpuBindGroupDrop(bindGroup: WGPUBindGroup) void;
-pub extern fn wgpuShaderModuleDrop(shaderModule: WGPUShaderModule) void;
-pub extern fn wgpuCommandBufferDrop(commandBuffer: WGPUCommandBuffer) void;
-pub extern fn wgpuRenderBundleDrop(renderBundle: WGPURenderBundle) void;
-pub extern fn wgpuComputePipelineDrop(computePipeline: WGPUComputePipeline) void;
-pub const WGPU_WHOLE_SIZE = @as(c_ulonglong, 0xffffffffffffffff);
-pub const WGPU_COPY_STRIDE_UNDEFINED = @as(c_ulong, 0xffffffff);
-pub const WGPU_LIMIT_U32_UNDEFINED = @as(c_ulong, 0xffffffff);
-pub const WGPU_LIMIT_U64_UNDEFINED = @as(c_ulonglong, 0xffffffffffffffff);
-pub const WGPU_ARRAY_LAYER_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
-pub const WGPU_MIP_LEVEL_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
-// pub const WGPUAdapterImpl = struct_WGPUAdapterImpl;
-// pub const WGPUBindGroupImpl = struct_WGPUBindGroupImpl;
-// pub const WGPUBindGroupLayoutImpl = struct_WGPUBindGroupLayoutImpl;
-// pub const WGPUBufferImpl = struct_WGPUBufferImpl;
-// pub const WGPUCommandBufferImpl = struct_WGPUCommandBufferImpl;
-// pub const WGPUCommandEncoderImpl = struct_WGPUCommandEncoderImpl;
-// pub const WGPUComputePassEncoderImpl = struct_WGPUComputePassEncoderImpl;
-// pub const WGPUComputePipelineImpl = struct_WGPUComputePipelineImpl;
-// pub const WGPUDeviceImpl = struct_WGPUDeviceImpl;
-// pub const WGPUInstanceImpl = struct_WGPUInstanceImpl;
-// pub const WGPUPipelineLayoutImpl = struct_WGPUPipelineLayoutImpl;
-// pub const WGPUQuerySetImpl = struct_WGPUQuerySetImpl;
-// pub const WGPUQueueImpl = struct_WGPUQueueImpl;
-// pub const WGPURenderBundleImpl = struct_WGPURenderBundleImpl;
-// pub const WGPURenderBundleEncoderImpl = struct_WGPURenderBundleEncoderImpl;
-// pub const WGPURenderPassEncoderImpl = struct_WGPURenderPassEncoderImpl;
-// pub const WGPURenderPipelineImpl = struct_WGPURenderPipelineImpl;
-// pub const WGPUSamplerImpl = struct_WGPUSamplerImpl;
-// pub const WGPUShaderModuleImpl = struct_WGPUShaderModuleImpl;
-// pub const WGPUSurfaceImpl = struct_WGPUSurfaceImpl;
-// pub const WGPUSwapChainImpl = struct_WGPUSwapChainImpl;
-// pub const WGPUTextureImpl = struct_WGPUTextureImpl;
-// pub const WGPUTextureViewImpl = struct_WGPUTextureViewImpl;
+pub extern fn wgpuRenderPassEncoderSetPushConstants(encoder: RenderPassEncoder, stages: ShaderStage, offset: u32, sizeBytes: u32, data: ?*c_void) void;
+pub extern fn wgpuBufferDrop(buffer: Buffer) void;
+pub extern fn wgpuCommandEncoderDrop(commandEncoder: CommandEncoder) void;
+pub extern fn wgpuDeviceDrop(device: Device) void;
+pub extern fn wgpuQuerySetDrop(querySet: QuerySet) void;
+pub extern fn wgpuRenderPipelineDrop(renderPipeline: RenderPipeline) void;
+pub extern fn wgpuTextureDrop(texture: Texture) void;
+pub extern fn wgpuTextureViewDrop(textureView: TextureView) void;
+pub extern fn wgpuSamplerDrop(sampler: Sampler) void;
+pub extern fn wgpuBindGroupLayoutDrop(bindGroupLayout: BindGroupLayout) void;
+pub extern fn wgpuPipelineLayoutDrop(pipelineLayout: PipelineLayout) void;
+pub extern fn wgpuBindGroupDrop(bindGroup: BindGroup) void;
+pub extern fn wgpuShaderModuleDrop(shaderModule: ShaderModule) void;
+pub extern fn wgpuCommandBufferDrop(commandBuffer: CommandBuffer) void;
+pub extern fn wgpuRenderBundleDrop(renderBundle: RenderBundle) void;
+pub extern fn wgpuComputePipelineDrop(computePipeline: ComputePipeline) void;
+pub const _WHOLE_SIZE = @as(c_ulonglong, 0xffffffffffffffff);
+pub const _COPY_STRIDE_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const _LIMIT_U32_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const _LIMIT_U64_UNDEFINED = @as(c_ulonglong, 0xffffffffffffffff);
+pub const _ARRAY_LAYER_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
+pub const _MIP_LEVEL_COUNT_UNDEFINED = @as(c_ulong, 0xffffffff);
+// pub const AdapterImpl = struct_AdapterImpl;
+// pub const BindGroupImpl = struct_BindGroupImpl;
+// pub const BindGroupLayoutImpl = struct_BindGroupLayoutImpl;
+// pub const BufferImpl = struct_BufferImpl;
+// pub const CommandBufferImpl = struct_CommandBufferImpl;
+// pub const CommandEncoderImpl = struct_CommandEncoderImpl;
+// pub const ComputePassEncoderImpl = struct_ComputePassEncoderImpl;
+// pub const ComputePipelineImpl = struct_ComputePipelineImpl;
+// pub const DeviceImpl = struct_DeviceImpl;
+// pub const InstanceImpl = struct_InstanceImpl;
+// pub const PipelineLayoutImpl = struct_PipelineLayoutImpl;
+// pub const QuerySetImpl = struct_QuerySetImpl;
+// pub const QueueImpl = struct_QueueImpl;
+// pub const RenderBundleImpl = struct_RenderBundleImpl;
+// pub const RenderBundleEncoderImpl = struct_RenderBundleEncoderImpl;
+// pub const RenderPassEncoderImpl = struct_RenderPassEncoderImpl;
+// pub const RenderPipelineImpl = struct_RenderPipelineImpl;
+// pub const SamplerImpl = struct_SamplerImpl;
+// pub const ShaderModuleImpl = struct_ShaderModuleImpl;
+// pub const SurfaceImpl = struct_SurfaceImpl;
+// pub const SwapChainImpl = struct_SwapChainImpl;
+// pub const TextureImpl = struct_TextureImpl;
+// pub const TextureViewImpl = struct_TextureViewImpl;
