@@ -2,6 +2,7 @@ const std = @import("std");
 const glfw = @import("glfw");
 const kn = std.os.windows.kernel32;
 const builtin = @import("builtin");
+const triangle_shader = @embedFile("shader/triangle.wgsl");
 const Wgpu = @import("Wgpu.zig");
 const Gfx = @import("Gfx.zig");
 
@@ -43,6 +44,65 @@ const indices = [_]Index{
     0, 1, 2,
     0, // padding
 };
+
+pub fn createPipeline(gfx: Gfx, vertex_layout: *const Wgpu.VertexBufferLayout) Wgpu.RenderPipeline {
+    const shader = gfx.wb.deviceCreateShaderModule(gfx.device, &.{
+        .nextInChain = Wgpu.toChainedStruct(&Wgpu.ShaderModuleWGSLDescriptor{
+            .chain = .{
+                .next = null,
+                .sType = .ShaderModuleWGSLDescriptor,
+            },
+            .source = triangle_shader,
+        }),
+        .label = null,
+    });
+    const pipeline_layout = gfx.wb.deviceCreatePipelineLayout(gfx.device, &.{
+        .bindGroupLayoutCount = 0,
+        .bindGroupLayouts = null,
+    });
+
+    return gfx.wb.deviceCreateRenderPipeline(gfx.device, &(Wgpu.RenderPipelineDescriptor){
+        .label = "Render pipeline",
+        .layout = pipeline_layout,
+        .vertex = .{
+            .module = shader,
+            .entryPoint = "vertex_main",
+            .constantCount = 0,
+            .constants = undefined,
+            // Note: remeber change this with buffer layout
+            .bufferCount = 1,
+            .buffers = @ptrCast([*]const Wgpu.VertexBufferLayout, vertex_layout),
+        },
+        .primitive = .{
+            .topology = .TriangleList,
+            .stripIndexFormat = .Undefined,
+            .frontFace = .CCW,
+            .cullMode = .None,
+        },
+        .multisample = .{
+            .count = 1,
+            .mask = ~@as(u32, 0),
+            .alphaToCoverageEnabled = false,
+        },
+        .fragment = &.{
+            .module = shader,
+            .entryPoint = "fragment_main",
+            .targetCount = 1,
+            .targets = @ptrCast([*]const Wgpu.ColorTargetState, &Wgpu.ColorTargetState{
+                .format = gfx.getSwapchainFormat(),
+                .blend = &.{
+                    .color = .{ .srcFactor = .One, .dstFactor = .Zero, .operation = .Add },
+                    .alpha = .{ .srcFactor = .One, .dstFactor = .Zero, .operation = .Add },
+                },
+                .writeMask = Wgpu.ColorWriteMask.all,
+            }),
+            .constantCount = 0,
+            .constants = undefined,
+        },
+        .depthStencil = null,
+    });
+}
+
 pub fn main() anyerror!void {
     const lib_path = if (builtin.mode == .Debug) "libs/libwgpu-debug.dll" else "libs/libwgpu-release.dll";
     var lib = try std.DynLib.open(lib_path);
@@ -72,9 +132,10 @@ pub fn main() anyerror!void {
         .attributes = @ptrCast([*]const Wgpu.VertexAttribute, &Vertex.vertex_attributes),
     };
 
-    gfx.createPipeline(&vsl);
+    const pipeline = createPipeline(gfx, &vsl);
     while (!window.shouldClose()) {
         try gfx.beginFrame();
+        gfx.bindPipeline(pipeline);
 
         gfx.draw(vertex_buffer, index_buffer, @truncate(u32, indices.len));
 

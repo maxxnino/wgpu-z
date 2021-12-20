@@ -18,7 +18,6 @@ window: glfw.Window,
 wb: Wgpu,
 encoder: Wgpu.CommandEncoder,
 render_pass: Wgpu.RenderPassEncoder,
-pipeline: Wgpu.RenderPipeline,
 
 pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
     const use_discrete_gpu = true;
@@ -28,7 +27,6 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
     gfx.wb = wb;
     gfx.encoder = .null_handle;
     gfx.render_pass = .null_handle;
-    gfx.pipeline = .null_handle;
 
     const hwnd = window.getNativeWindow32();
     const hinstance = windows.kernel32.GetModuleHandleW(null);
@@ -108,7 +106,10 @@ pub fn beginFrame(gfx: *Gfx) !void {
         .depthStencilAttachment = null,
         .occlusionQuerySet = undefined,
     });
-    gfx.wb.renderPassEncoderSetPipeline(gfx.render_pass, gfx.pipeline);
+}
+
+pub fn bindPipeline(gfx: Gfx, pipeline: Wgpu.RenderPipeline) void {
+    gfx.wb.renderPassEncoderSetPipeline(gfx.render_pass, pipeline);
 }
 
 pub fn draw(gfx: Gfx, vertex_buffer: Wgpu.Buffer, index_buffer: Wgpu.Buffer, indices_count: u32) void {
@@ -136,67 +137,11 @@ pub fn endFrame(gfx: *Gfx) void {
     const cmd_buffer = gfx.wb.commandEncoderFinish(gfx.encoder, &.{ .label = null });
     gfx.wb.queueSubmit(gfx.queue, 1, @ptrCast([*]const Wgpu.CommandBuffer, &cmd_buffer));
     gfx.wb.swapChainPresent(gfx.swapchain);
-    gfx.render_pass = .null_handle;
-    gfx.encoder = .null_handle;
 }
 
 /// Note: remeber change this with buffer layout
-pub fn createPipeline(gfx: *Gfx, vertex_layout: *const Wgpu.VertexBufferLayout) void {
-    const shader = gfx.wb.deviceCreateShaderModule(gfx.device, &.{
-        .nextInChain = Wgpu.toChainedStruct(&Wgpu.ShaderModuleWGSLDescriptor{
-            .chain = .{
-                .next = null,
-                .sType = .ShaderModuleWGSLDescriptor,
-            },
-            .source = triangle_shader,
-        }),
-        .label = null,
-    });
-    const piptline_layout = gfx.wb.deviceCreatePipelineLayout(gfx.device, &.{
-        .bindGroupLayoutCount = 0,
-        .bindGroupLayouts = null,
-    });
-
-    gfx.pipeline = gfx.wb.deviceCreateRenderPipeline(gfx.device, &(Wgpu.RenderPipelineDescriptor){
-        .label = "Render pipeline",
-        .layout = piptline_layout,
-        .vertex = .{
-            .module = shader,
-            .entryPoint = "vertex_main",
-            .constantCount = 0,
-            .constants = undefined,
-            // Note: remeber change this with buffer layout
-            .bufferCount = 1,
-            .buffers = @ptrCast([*]const Wgpu.VertexBufferLayout, vertex_layout),
-        },
-        .primitive = .{
-            .topology = .TriangleList,
-            .stripIndexFormat = .Undefined,
-            .frontFace = .CCW,
-            .cullMode = .None,
-        },
-        .multisample = .{
-            .count = 1,
-            .mask = ~@as(u32, 0),
-            .alphaToCoverageEnabled = false,
-        },
-        .fragment = &.{
-            .module = shader,
-            .entryPoint = "fragment_main",
-            .targetCount = 1,
-            .targets = @ptrCast([*]const Wgpu.ColorTargetState, &Wgpu.ColorTargetState{
-                .format = gfx.swapchain_des.format,
-                .blend = &.{
-                    .color = .{ .srcFactor = .One, .dstFactor = .Zero, .operation = .Add },
-                    .alpha = .{ .srcFactor = .One, .dstFactor = .Zero, .operation = .Add },
-                },
-                .writeMask = Wgpu.ColorWriteMask.all,
-            }),
-            .constantCount = 0,
-            .constants = undefined,
-        },
-        .depthStencil = null,
-    });
+pub fn getSwapchainFormat(gfx: Gfx) Wgpu.TextureFormat {
+    return gfx.swapchain_des.format;
 }
 
 pub fn aquireFrameBuffer(gfx: *Gfx) !void {
