@@ -48,7 +48,7 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
         .compatibleSurface = gfx.surface,
         .powerPreference = if (use_discrete_gpu) .HighPerformance else .LowPower,
         .forceFallbackAdapter = undefined,
-    }, requestAdapterCallback, @ptrCast(*c_void, &gfx));
+    }, requestAdapterCallback, @ptrCast(*anyopaque, &gfx));
 
     var properties: Wgpu.AdapterProperties = undefined;
     wb.adapterGetProperties(gfx.adapter, &properties);
@@ -72,7 +72,7 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
         }),
         .requiredFeaturesCount = 0,
         .requiredFeatures = undefined,
-    }, requestDeviceCallback, @ptrCast(*c_void, &gfx));
+    }, requestDeviceCallback, @ptrCast(*anyopaque, &gfx));
 
     const size = try window.getSize();
     gfx.swapchain_des = Wgpu.SwapChainDescriptor{
@@ -227,14 +227,14 @@ pub fn createBufferFromData(gfx: Gfx, data: anytype, usage: Wgpu.BufferUsage, si
 }
 
 pub fn queueWriteBuffer(gfx: Gfx, buffer: Wgpu.Buffer, offset: usize, data: anytype, size: usize) void {
-    gfx.wb.queueWriteBuffer(gfx.queue, buffer, offset, @ptrCast(*const c_void, data), size);
+    gfx.wb.queueWriteBuffer(gfx.queue, buffer, offset, @ptrCast(*const anyopaque, data), size);
 }
 
 fn requestAdapterCallback(
     status: Wgpu.RequestAdapterStatus,
     received: Wgpu.Adapter,
     message: [*:0]const u8,
-    userdata: *c_void,
+    userdata: *anyopaque,
 ) callconv(.C) void {
     _ = status;
     _ = message;
@@ -246,7 +246,7 @@ fn requestDeviceCallback(
     status: Wgpu.RequestDeviceStatus,
     received: Wgpu.Device,
     message: [*:0]const u8,
-    userdata: *c_void,
+    userdata: *anyopaque,
 ) callconv(.C) void {
     _ = status;
     _ = message;

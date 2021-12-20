@@ -736,16 +736,16 @@ pub const SurfaceDescriptorFromCanvasHTMLSelector = extern struct {
 };
 pub const SurfaceDescriptorFromMetalLayer = extern struct {
     chain: ChainedStruct,
-    layer: ?*c_void,
+    layer: ?*anyopaque,
 };
 pub const SurfaceDescriptorFromWindowsHWND = extern struct {
     chain: ChainedStruct,
-    hinstance: ?*c_void,
-    hwnd: ?*c_void,
+    hinstance: ?*anyopaque,
+    hwnd: ?*anyopaque,
 };
 pub const SurfaceDescriptorFromXlib = extern struct {
     chain: ChainedStruct,
-    display: ?*c_void,
+    display: ?*anyopaque,
     window: u32,
 };
 pub const SwapChainDescriptor = extern struct {
@@ -935,25 +935,25 @@ pub const RenderPipelineDescriptor = extern struct {
     fragment: ?*const FragmentState,
 };
 
-pub const BufferMapCallback = ?fn (BufferMapAsyncStatus, ?*c_void) callconv(.C) void;
-pub const CreateComputePipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, ComputePipeline, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const CreateRenderPipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, RenderPipeline, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const DeviceLostCallback = ?fn (DeviceLostReason, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const ErrorCallback = ?fn (ErrorType, [*c]const u8, ?*c_void) callconv(.C) void;
-pub const QueueWorkDoneCallback = ?fn (QueueWorkDoneStatus, ?*c_void) callconv(.C) void;
-pub const RequestAdapterCallback = fn (RequestAdapterStatus, Adapter, [*:0]const u8, *c_void) callconv(.C) void;
-pub const RequestDeviceCallback = fn (RequestDeviceStatus, Device, [*:0]const u8, *c_void) callconv(.C) void;
+pub const BufferMapCallback = ?fn (BufferMapAsyncStatus, ?*anyopaque) callconv(.C) void;
+pub const CreateComputePipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, ComputePipeline, [*c]const u8, ?*anyopaque) callconv(.C) void;
+pub const CreateRenderPipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, RenderPipeline, [*c]const u8, ?*anyopaque) callconv(.C) void;
+pub const DeviceLostCallback = ?fn (DeviceLostReason, [*c]const u8, ?*anyopaque) callconv(.C) void;
+pub const ErrorCallback = ?fn (ErrorType, [*c]const u8, ?*anyopaque) callconv(.C) void;
+pub const QueueWorkDoneCallback = ?fn (QueueWorkDoneStatus, ?*anyopaque) callconv(.C) void;
+pub const RequestAdapterCallback = fn (RequestAdapterStatus, Adapter, [*:0]const u8, *anyopaque) callconv(.C) void;
+pub const RequestDeviceCallback = fn (RequestDeviceStatus, Device, [*:0]const u8, *anyopaque) callconv(.C) void;
 pub const Proc = ?fn () callconv(.C) void;
 pub const ProcCreateInstance = ?fn ([*c]const InstanceDescriptor) callconv(.C) Instance;
 pub const ProcGetProcAddress = ?fn (Device, [*c]const u8) callconv(.C) Proc;
 pub const ProcAdapterGetLimits = ?fn (Adapter, [*c]SupportedLimits) callconv(.C) bool;
 pub const ProcAdapterGetProperties = ?fn (Adapter, [*c]AdapterProperties) callconv(.C) void;
 pub const ProcAdapterHasFeature = ?fn (Adapter, FeatureName) callconv(.C) bool;
-pub const ProcAdapterRequestDevice = ?fn (Adapter, [*c]const DeviceDescriptor, RequestDeviceCallback, ?*c_void) callconv(.C) void;
+pub const ProcAdapterRequestDevice = ?fn (Adapter, [*c]const DeviceDescriptor, RequestDeviceCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcBufferDestroy = ?fn (Buffer) callconv(.C) void;
-pub const ProcBufferGetConstMappedRange = ?fn (Buffer, usize, usize) callconv(.C) ?*const c_void;
-pub const ProcBufferGetMappedRange = ?fn (Buffer, usize, usize) callconv(.C) ?*c_void;
-pub const ProcBufferMapAsync = ?fn (Buffer, MapModeFlags, usize, usize, BufferMapCallback, ?*c_void) callconv(.C) void;
+pub const ProcBufferGetConstMappedRange = ?fn (Buffer, usize, usize) callconv(.C) ?*const anyopaque;
+pub const ProcBufferGetMappedRange = ?fn (Buffer, usize, usize) callconv(.C) ?*anyopaque;
+pub const ProcBufferMapAsync = ?fn (Buffer, MapModeFlags, usize, usize, BufferMapCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcBufferUnmap = ?fn (Buffer) callconv(.C) void;
 pub const ProcCommandEncoderBeginComputePass = ?fn (CommandEncoder, [*c]const ComputePassDescriptor) callconv(.C) ComputePassEncoder;
 pub const ProcCommandEncoderBeginRenderPass = ?fn (CommandEncoder, [*c]const RenderPassDescriptor) callconv(.C) RenderPassEncoder;
@@ -985,12 +985,12 @@ pub const ProcDeviceCreateBindGroupLayout = ?fn (Device, [*c]const BindGroupLayo
 pub const ProcDeviceCreateBuffer = ?fn (Device, [*c]const BufferDescriptor) callconv(.C) Buffer;
 pub const ProcDeviceCreateCommandEncoder = ?fn (Device, [*c]const CommandEncoderDescriptor) callconv(.C) CommandEncoder;
 pub const ProcDeviceCreateComputePipeline = ?fn (Device, [*c]const ComputePipelineDescriptor) callconv(.C) ComputePipeline;
-pub const ProcDeviceCreateComputePipelineAsync = ?fn (Device, [*c]const ComputePipelineDescriptor, CreateComputePipelineAsyncCallback, ?*c_void) callconv(.C) void;
+pub const ProcDeviceCreateComputePipelineAsync = ?fn (Device, [*c]const ComputePipelineDescriptor, CreateComputePipelineAsyncCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcDeviceCreatePipelineLayout = ?fn (Device, [*c]const PipelineLayoutDescriptor) callconv(.C) PipelineLayout;
 pub const ProcDeviceCreateQuerySet = ?fn (Device, [*c]const QuerySetDescriptor) callconv(.C) QuerySet;
 pub const ProcDeviceCreateRenderBundleEncoder = ?fn (Device, [*c]const RenderBundleEncoderDescriptor) callconv(.C) RenderBundleEncoder;
 pub const ProcDeviceCreateRenderPipeline = ?fn (Device, [*c]const RenderPipelineDescriptor) callconv(.C) RenderPipeline;
-pub const ProcDeviceCreateRenderPipelineAsync = ?fn (Device, [*c]const RenderPipelineDescriptor, CreateRenderPipelineAsyncCallback, ?*c_void) callconv(.C) void;
+pub const ProcDeviceCreateRenderPipelineAsync = ?fn (Device, [*c]const RenderPipelineDescriptor, CreateRenderPipelineAsyncCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcDeviceCreateSampler = ?fn (Device, [*c]const SamplerDescriptor) callconv(.C) Sampler;
 pub const ProcDeviceCreateShaderModule = ?fn (Device, [*c]const ShaderModuleDescriptor) callconv(.C) ShaderModule;
 pub const ProcDeviceCreateSwapChain = ?fn (Device, Surface, [*c]const SwapChainDescriptor) callconv(.C) SwapChain;
@@ -998,18 +998,18 @@ pub const ProcDeviceCreateTexture = ?fn (Device, [*c]const TextureDescriptor) ca
 pub const ProcDeviceDestroy = ?fn (Device) callconv(.C) void;
 pub const ProcDeviceGetLimits = ?fn (Device, [*c]SupportedLimits) callconv(.C) bool;
 pub const ProcDeviceGetQueue = ?fn (Device) callconv(.C) Queue;
-pub const ProcDevicePopErrorScope = ?fn (Device, ErrorCallback, ?*c_void) callconv(.C) bool;
+pub const ProcDevicePopErrorScope = ?fn (Device, ErrorCallback, ?*anyopaque) callconv(.C) bool;
 pub const ProcDevicePushErrorScope = ?fn (Device, ErrorFilter) callconv(.C) void;
-pub const ProcDeviceSetDeviceLostCallback = ?fn (Device, DeviceLostCallback, ?*c_void) callconv(.C) void;
-pub const ProcDeviceSetUncapturedErrorCallback = ?fn (Device, ErrorCallback, ?*c_void) callconv(.C) void;
+pub const ProcDeviceSetDeviceLostCallback = ?fn (Device, DeviceLostCallback, ?*anyopaque) callconv(.C) void;
+pub const ProcDeviceSetUncapturedErrorCallback = ?fn (Device, ErrorCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcInstanceCreateSurface = ?fn (Instance, [*c]const SurfaceDescriptor) callconv(.C) Surface;
 pub const ProcInstanceProcessEvents = ?fn (Instance) callconv(.C) void;
-pub const ProcInstanceRequestAdapter = ?fn (Instance, [*c]const RequestAdapterOptions, RequestAdapterCallback, ?*c_void) callconv(.C) void;
+pub const ProcInstanceRequestAdapter = ?fn (Instance, [*c]const RequestAdapterOptions, RequestAdapterCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcQuerySetDestroy = ?fn (QuerySet) callconv(.C) void;
-pub const ProcQueueOnSubmittedWorkDone = ?fn (Queue, u64, QueueWorkDoneCallback, ?*c_void) callconv(.C) void;
+pub const ProcQueueOnSubmittedWorkDone = ?fn (Queue, u64, QueueWorkDoneCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcQueueSubmit = ?fn (Queue, u32, [*c]const CommandBuffer) callconv(.C) void;
-pub const ProcQueueWriteBuffer = ?fn (Queue, Buffer, u64, ?*const c_void, usize) callconv(.C) void;
-pub const ProcQueueWriteTexture = ?fn (Queue, [*c]const ImageCopyTexture, ?*const c_void, usize, [*c]const TextureDataLayout, [*c]const Extent3D) callconv(.C) void;
+pub const ProcQueueWriteBuffer = ?fn (Queue, Buffer, u64, ?*const anyopaque, usize) callconv(.C) void;
+pub const ProcQueueWriteTexture = ?fn (Queue, [*c]const ImageCopyTexture, ?*const anyopaque, usize, [*c]const TextureDataLayout, [*c]const Extent3D) callconv(.C) void;
 pub const ProcRenderBundleEncoderDraw = ?fn (RenderBundleEncoder, u32, u32, u32, u32) callconv(.C) void;
 pub const ProcRenderBundleEncoderDrawIndexed = ?fn (RenderBundleEncoder, u32, u32, u32, i32, u32) callconv(.C) void;
 pub const ProcRenderBundleEncoderDrawIndexedIndirect = ?fn (RenderBundleEncoder, Buffer, u64) callconv(.C) void;
@@ -1057,11 +1057,11 @@ pub extern fn wgpuGetProcAddress(device: Device, procName: [*c]const u8) Proc;
 pub extern fn wgpuAdapterGetLimits(adapter: Adapter, limits: [*c]SupportedLimits) bool;
 pub extern fn wgpuAdapterGetProperties(adapter: Adapter, properties: *AdapterProperties) void;
 pub extern fn wgpuAdapterHasFeature(adapter: Adapter, feature: FeatureName) bool;
-pub extern fn wgpuAdapterRequestDevice(adapter: Adapter, descriptor: *const DeviceDescriptor, callback: RequestDeviceCallback, userdata: *c_void) void;
+pub extern fn wgpuAdapterRequestDevice(adapter: Adapter, descriptor: *const DeviceDescriptor, callback: RequestDeviceCallback, userdata: *anyopaque) void;
 pub extern fn wgpuBufferDestroy(buffer: Buffer) void;
-pub extern fn wgpuBufferGetConstMappedRange(buffer: Buffer, offset: usize, size: usize) ?*const c_void;
-pub extern fn wgpuBufferGetMappedRange(buffer: Buffer, offset: usize, size: usize) ?*c_void;
-pub extern fn wgpuBufferMapAsync(buffer: Buffer, mode: MapModeFlags, offset: usize, size: usize, callback: BufferMapCallback, userdata: ?*c_void) void;
+pub extern fn wgpuBufferGetConstMappedRange(buffer: Buffer, offset: usize, size: usize) ?*const anyopaque;
+pub extern fn wgpuBufferGetMappedRange(buffer: Buffer, offset: usize, size: usize) ?*anyopaque;
+pub extern fn wgpuBufferMapAsync(buffer: Buffer, mode: MapModeFlags, offset: usize, size: usize, callback: BufferMapCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuBufferUnmap(buffer: Buffer) void;
 pub extern fn wgpuCommandEncoderBeginComputePass(commandEncoder: CommandEncoder, descriptor: [*c]const ComputePassDescriptor) ComputePassEncoder;
 pub extern fn wgpuCommandEncoderBeginRenderPass(commandEncoder: CommandEncoder, descriptor: *const RenderPassDescriptor) RenderPassEncoder;
@@ -1093,12 +1093,12 @@ pub extern fn wgpuDeviceCreateBindGroupLayout(device: Device, descriptor: [*c]co
 pub extern fn wgpuDeviceCreateBuffer(device: Device, descriptor: *const BufferDescriptor) Buffer;
 pub extern fn wgpuDeviceCreateCommandEncoder(device: Device, descriptor: *const CommandEncoderDescriptor) CommandEncoder;
 pub extern fn wgpuDeviceCreateComputePipeline(device: Device, descriptor: [*c]const ComputePipelineDescriptor) ComputePipeline;
-pub extern fn wgpuDeviceCreateComputePipelineAsync(device: Device, descriptor: [*c]const ComputePipelineDescriptor, callback: CreateComputePipelineAsyncCallback, userdata: ?*c_void) void;
+pub extern fn wgpuDeviceCreateComputePipelineAsync(device: Device, descriptor: [*c]const ComputePipelineDescriptor, callback: CreateComputePipelineAsyncCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuDeviceCreatePipelineLayout(device: Device, descriptor: *const PipelineLayoutDescriptor) PipelineLayout;
 pub extern fn wgpuDeviceCreateQuerySet(device: Device, descriptor: [*c]const QuerySetDescriptor) QuerySet;
 pub extern fn wgpuDeviceCreateRenderBundleEncoder(device: Device, descriptor: [*c]const RenderBundleEncoderDescriptor) RenderBundleEncoder;
 pub extern fn wgpuDeviceCreateRenderPipeline(device: Device, descriptor: *const RenderPipelineDescriptor) RenderPipeline;
-pub extern fn wgpuDeviceCreateRenderPipelineAsync(device: Device, descriptor: [*c]const RenderPipelineDescriptor, callback: CreateRenderPipelineAsyncCallback, userdata: ?*c_void) void;
+pub extern fn wgpuDeviceCreateRenderPipelineAsync(device: Device, descriptor: [*c]const RenderPipelineDescriptor, callback: CreateRenderPipelineAsyncCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuDeviceCreateSampler(device: Device, descriptor: [*c]const SamplerDescriptor) Sampler;
 pub extern fn wgpuDeviceCreateShaderModule(device: Device, descriptor: *const ShaderModuleDescriptor) ShaderModule;
 pub extern fn wgpuDeviceCreateSwapChain(device: Device, surface: Surface, descriptor: *const SwapChainDescriptor) SwapChain;
@@ -1106,18 +1106,18 @@ pub extern fn wgpuDeviceCreateTexture(device: Device, descriptor: [*c]const Text
 pub extern fn wgpuDeviceDestroy(device: Device) void;
 pub extern fn wgpuDeviceGetLimits(device: Device, limits: [*c]SupportedLimits) bool;
 pub extern fn wgpuDeviceGetQueue(device: Device) Queue;
-pub extern fn wgpuDevicePopErrorScope(device: Device, callback: ErrorCallback, userdata: ?*c_void) bool;
+pub extern fn wgpuDevicePopErrorScope(device: Device, callback: ErrorCallback, userdata: ?*anyopaque) bool;
 pub extern fn wgpuDevicePushErrorScope(device: Device, filter: ErrorFilter) void;
-pub extern fn wgpuDeviceSetDeviceLostCallback(device: Device, callback: DeviceLostCallback, userdata: ?*c_void) void;
-pub extern fn wgpuDeviceSetUncapturedErrorCallback(device: Device, callback: ErrorCallback, userdata: ?*c_void) void;
+pub extern fn wgpuDeviceSetDeviceLostCallback(device: Device, callback: DeviceLostCallback, userdata: ?*anyopaque) void;
+pub extern fn wgpuDeviceSetUncapturedErrorCallback(device: Device, callback: ErrorCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuInstanceCreateSurface(instance: Instance, descriptor: *const SurfaceDescriptor) Surface;
 pub extern fn wgpuInstanceProcessEvents(instance: Instance) void;
-pub extern fn wgpuInstanceRequestAdapter(instance: Instance, options: ?*const RequestAdapterOptions, callback: RequestAdapterCallback, userdata: ?*c_void) void;
+pub extern fn wgpuInstanceRequestAdapter(instance: Instance, options: ?*const RequestAdapterOptions, callback: RequestAdapterCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuQuerySetDestroy(querySet: QuerySet) void;
-pub extern fn wgpuQueueOnSubmittedWorkDone(queue: Queue, signalValue: u64, callback: QueueWorkDoneCallback, userdata: ?*c_void) void;
+pub extern fn wgpuQueueOnSubmittedWorkDone(queue: Queue, signalValue: u64, callback: QueueWorkDoneCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuQueueSubmit(queue: Queue, commandCount: u32, commands: [*]const CommandBuffer) void;
-pub extern fn wgpuQueueWriteBuffer(queue: Queue, buffer: Buffer, bufferOffset: u64, data: *const c_void, size: usize) void;
-pub extern fn wgpuQueueWriteTexture(queue: Queue, destination: [*c]const ImageCopyTexture, data: ?*const c_void, dataSize: usize, dataLayout: [*c]const TextureDataLayout, writeSize: [*c]const Extent3D) void;
+pub extern fn wgpuQueueWriteBuffer(queue: Queue, buffer: Buffer, bufferOffset: u64, data: *const anyopaque, size: usize) void;
+pub extern fn wgpuQueueWriteTexture(queue: Queue, destination: [*c]const ImageCopyTexture, data: ?*const anyopaque, dataSize: usize, dataLayout: [*c]const TextureDataLayout, writeSize: [*c]const Extent3D) void;
 pub extern fn wgpuRenderBundleEncoderDraw(renderBundleEncoder: RenderBundleEncoder, vertexCount: u32, instanceCount: u32, firstVertex: u32, firstInstance: u32) void;
 pub extern fn wgpuRenderBundleEncoderDrawIndexed(renderBundleEncoder: RenderBundleEncoder, indexCount: u32, instanceCount: u32, firstIndex: u32, baseVertex: i32, firstInstance: u32) void;
 pub extern fn wgpuRenderBundleEncoderDrawIndexedIndirect(renderBundleEncoder: RenderBundleEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
@@ -1192,7 +1192,7 @@ pub extern fn wgpuDevicePoll(device: Device, force_wait: bool) void;
 pub extern fn wgpuSetLogCallback(callback: LogCallback) void;
 pub extern fn wgpuSetLogLevel(level: LogLevel) void;
 pub extern fn wgpuGetVersion() u32;
-pub extern fn wgpuRenderPassEncoderSetPushConstants(encoder: RenderPassEncoder, stages: ShaderStage, offset: u32, sizeBytes: u32, data: ?*c_void) void;
+pub extern fn wgpuRenderPassEncoderSetPushConstants(encoder: RenderPassEncoder, stages: ShaderStage, offset: u32, sizeBytes: u32, data: ?*anyopaque) void;
 pub extern fn wgpuBufferDrop(buffer: Buffer) void;
 pub extern fn wgpuCommandEncoderDrop(commandEncoder: CommandEncoder) void;
 pub extern fn wgpuDeviceDrop(device: Device) void;
