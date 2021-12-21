@@ -28,6 +28,27 @@ bufferDestroy: @TypeOf(Wgpu.wgpuBufferDestroy),
 renderPassEncoderSetVertexBuffer: @TypeOf(Wgpu.wgpuRenderPassEncoderSetVertexBuffer),
 renderPassEncoderSetIndexBuffer: @TypeOf(Wgpu.wgpuRenderPassEncoderSetIndexBuffer),
 renderPassEncoderDrawIndexed: @TypeOf(Wgpu.wgpuRenderPassEncoderDrawIndexed),
+setLogCallback: @TypeOf(Wgpu.wgpuSetLogCallback),
+setLogLevel: @TypeOf(Wgpu.wgpuSetLogLevel),
+
+textureViewDrop: @TypeOf(Wgpu.wgpuTextureViewDrop),
+
+bufferDrop: @TypeOf(Wgpu.wgpuBufferDrop),
+deviceDrop: @TypeOf(Wgpu.wgpuDeviceDrop),
+querySetDrop: @TypeOf(Wgpu.wgpuQuerySetDrop),
+textureDrop: @TypeOf(Wgpu.wgpuTextureDrop),
+samplerDrop: @TypeOf(Wgpu.wgpuSamplerDrop),
+bindGroupLayoutDrop: @TypeOf(Wgpu.wgpuBindGroupLayoutDrop),
+pipelineLayoutDrop: @TypeOf(Wgpu.wgpuPipelineLayoutDrop),
+bindGroupDrop: @TypeOf(Wgpu.wgpuBindGroupDrop),
+shaderModuleDrop: @TypeOf(Wgpu.wgpuShaderModuleDrop),
+renderBundleDrop: @TypeOf(Wgpu.wgpuRenderBundleDrop),
+renderPipelineDrop: @TypeOf(Wgpu.wgpuRenderPipelineDrop),
+computePipelineDrop: @TypeOf(Wgpu.wgpuComputePipelineDrop),
+
+commandBufferDrop: @TypeOf(Wgpu.wgpuCommandBufferDrop),
+commandEncoderDrop: @TypeOf(Wgpu.wgpuCommandEncoderDrop),
+
 
 fn symbol(comptime decl_name: []const u8) [:0]const u8 {
     const upper_char = [_]u8{comptime std.ascii.toUpper(decl_name[0])};
@@ -41,7 +62,11 @@ pub fn loadAllFromDynLib(lib: *DynLib) !Wgpu {
         @field(wgpu, field.name) = lib.lookup(
             field.field_type,
             symbol(field.name),
-        ) orelse return error.FunctionNotFound;
+        ) orelse {
+            std.log.err("Function Not Found: {s}", .{field.name});
+            return error.FunctionNotFound;
+        };
+
     }
     return wgpu;
 }

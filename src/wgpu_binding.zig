@@ -117,6 +117,13 @@ pub const BufferMapAsyncStatus = enum(i32) {
     UnmappedBeforeCallback = 5,
     _,
 };
+pub const CompilationInfoRequestStatus = enum(i32) {
+    Success = 0,
+    Error = 1,
+    DeviceLost = 2,
+    Unknown = 3,
+    _,
+};
 pub const CompareFunction = enum(i32) {
     Undefined = 0,
     Never = 1,
@@ -129,6 +136,13 @@ pub const CompareFunction = enum(i32) {
     Always = 8,
     _,
 };
+
+pub const ComputePassTimestampLocation = enum(i32) {
+    Beginning = 0,
+    End = 1,
+    _,
+};
+
 pub const CompilationMessageType = enum(i32) {
     Error = 0,
     Warning = 1,
@@ -170,12 +184,15 @@ pub const ErrorType = enum(i32) {
 };
 pub const FeatureName = enum(i32) {
     Undefined = 0,
-    DepthClamping = 1,
+    DepthClipControl = 1,
     Depth24UnormStencil8 = 2,
     Depth32FloatStencil8 = 3,
     TimestampQuery = 4,
     PipelineStatisticsQuery = 5,
     TextureCompressionBC = 6,
+    TextureCompressionETC2 = 7,
+    TextureCompressionASTC = 8,
+    IndirectFirstInstance = 9,
     _,
 };
 pub const FilterMode = enum(i32) {
@@ -208,8 +225,9 @@ pub const PipelineStatisticName = enum(i32) {
     _,
 };
 pub const PowerPreference = enum(i32) {
-    LowPower = 0,
-    HighPerformance = 1,
+    Undefined = 0,
+    LowPower = 1,
+    HighPerformance = 2,
     _,
 };
 pub const PresentMode = enum(i32) {
@@ -239,6 +257,12 @@ pub const QueueWorkDoneStatus = enum(i32) {
     DeviceLost = 3,
     _,
 };
+pub const RenderPassTimestampLocation = enum(i32) {
+    Beginning = 0,
+    End = 1,
+    _,
+};
+
 pub const RequestAdapterStatus = enum(i32) {
     Success = 0,
     Unavailable = 1,
@@ -260,7 +284,7 @@ pub const SType = enum(i32) {
     SurfaceDescriptorFromCanvasHTMLSelector = 4,
     ShaderModuleSPIRVDescriptor = 5,
     ShaderModuleWGSLDescriptor = 6,
-    PrimitiveDepthClampingState = 7,
+    PrimitiveDepthClipControl = 7,
 
     //wgpu-native Start at 6 to prevent collisions with webgpu STypes
     DeviceExtras = 1610612737,
@@ -356,21 +380,61 @@ pub const TextureFormat = enum(i32) {
     Depth16Unorm = 38,
     Depth24Plus = 39,
     Depth24PlusStencil8 = 40,
-    Depth32Float = 41,
-    BC1RGBAUnorm = 42,
-    BC1RGBAUnormSrgb = 43,
-    BC2RGBAUnorm = 44,
-    BC2RGBAUnormSrgb = 45,
-    BC3RGBAUnorm = 46,
-    BC3RGBAUnormSrgb = 47,
-    BC4RUnorm = 48,
-    BC4RSnorm = 49,
-    BC5RGUnorm = 50,
-    BC5RGSnorm = 51,
-    BC6HRGBUfloat = 52,
-    BC6HRGBFloat = 53,
-    BC7RGBAUnorm = 54,
-    BC7RGBAUnormSrgb = 55,
+    Depth24UnormStencil8 = 41,
+    Depth32Float = 42,
+    Depth32FloatStencil8 = 43,
+    BC1RGBAUnorm = 44,
+    BC1RGBAUnormSrgb = 45,
+    BC2RGBAUnorm = 46,
+    BC2RGBAUnormSrgb = 47,
+    BC3RGBAUnorm = 48,
+    BC3RGBAUnormSrgb = 49,
+    BC4RUnorm = 50,
+    BC4RSnorm = 51,
+    BC5RGUnorm = 52,
+    BC5RGSnorm = 53,
+    BC6HRGBUfloat = 54,
+    BC6HRGBFloat = 55,
+    BC7RGBAUnorm = 56,
+    BC7RGBAUnormSrgb = 57,
+    ETC2RGB8Unorm = 58,
+    ETC2RGB8UnormSrgb = 59,
+    ETC2RGB8A1Unorm = 60,
+    ETC2RGB8A1UnormSrgb = 61,
+    ETC2RGBA8Unorm = 62,
+    ETC2RGBA8UnormSrgb = 63,
+    EACR11Unorm = 64,
+    EACR11Snorm = 65,
+    EACRG11Unorm = 66,
+    EACRG11Snorm = 67,
+    ASTC4x4Unorm = 68,
+    ASTC4x4UnormSrgb = 69,
+    ASTC5x4Unorm = 70,
+    ASTC5x4UnormSrgb = 71,
+    ASTC5x5Unorm = 72,
+    ASTC5x5UnormSrgb = 73,
+    ASTC6x5Unorm = 74,
+    ASTC6x5UnormSrgb = 75,
+    ASTC6x6Unorm = 76,
+    ASTC6x6UnormSrgb = 77,
+    ASTC8x5Unorm = 78,
+    ASTC8x5UnormSrgb = 79,
+    ASTC8x6Unorm = 80,
+    ASTC8x6UnormSrgb = 81,
+    ASTC8x8Unorm = 82,
+    ASTC8x8UnormSrgb = 83,
+    ASTC10x5Unorm = 84,
+    ASTC10x5UnormSrgb = 85,
+    ASTC10x6Unorm = 86,
+    ASTC10x6UnormSrgb = 87,
+    ASTC10x8Unorm = 88,
+    ASTC10x8UnormSrgb = 89,
+    ASTC10x10Unorm = 90,
+    ASTC10x10UnormSrgb = 91,
+    ASTC12x10Unorm = 92,
+    ASTC12x10UnormSrgb = 93,
+    ASTC12x12Unorm = 94,
+    ASTC12x12UnormSrgb = 95,
     _,
 };
 pub const TextureSampleType = enum(i32) {
@@ -466,7 +530,11 @@ pub const BufferUsage = packed struct {
     _reserved_bit_30: bool = false,
     _reserved_bit_31: bool = false,
 
-    pub usingnamespace FlagsMixin(@This(), Flags);
+    const Self = @This();
+    comptime {
+        std.debug.assert(@sizeOf(Self) == @sizeOf(Flags));
+    }
+    pub usingnamespace FlagsMixin(Self, Flags);
 };
 
 pub const ColorWriteMask = packed struct {
@@ -478,18 +546,23 @@ pub const ColorWriteMask = packed struct {
     pub const all = Self{ .Red = true, .Green = true, .Blue = true, .Alpha = true };
 
     const Self = @This();
+    comptime {
+        std.debug.assert(@sizeOf(Self) == @sizeOf(Flags));
+    }
     pub usingnamespace FlagsMixin(Self, Flags);
 };
 pub const MapMode = enum(i32) {
     None = 0,
     Read = 1,
     Write = 2,
+    _,
 };
 pub const ShaderStage = enum(i32) {
     None = 0,
     Vertex = 1,
     Fragment = 2,
     Compute = 4,
+    _,
 };
 pub const TextureUsage = packed struct {
     CopySrc: bool = false,
@@ -499,7 +572,11 @@ pub const TextureUsage = packed struct {
     RenderAttachment: bool = false,
     _reserved_05_31: u27 = 0,
 
-    pub usingnamespace FlagsMixin(@This(), Flags);
+    const Self = @This();
+    comptime {
+        std.debug.assert(@sizeOf(Self) == @sizeOf(Flags));
+    }
+    pub usingnamespace FlagsMixin(Self, Flags);
 };
 
 pub const MapModeFlags = Flags;
@@ -524,7 +601,7 @@ pub const AdapterProperties = extern struct {
     backendType: BackendType,
 };
 pub const BindGroupEntry = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     binding: u32,
     buffer: Buffer,
     offset: u64,
@@ -538,7 +615,7 @@ pub const BlendComponent = extern struct {
     dstFactor: BlendFactor,
 };
 pub const BufferBindingLayout = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     type: BufferBindingType,
     hasDynamicOffset: bool,
     minBindingSize: u64,
@@ -565,21 +642,22 @@ pub const CommandEncoderDescriptor = extern struct {
     label: [*:0]const u8,
 };
 pub const CompilationMessage = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    message: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    message: ?[*:0]const u8,
     type: CompilationMessageType,
     lineNum: u64,
     linePos: u64,
     offset: u64,
     length: u64,
 };
-pub const ComputePassDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+pub const ComputePassTimestampWrite = extern struct {
+    querySet: QuerySet,
+    queryIndex: u32,
+    location: ComputePassTimestampLocation,
 };
 pub const ConstantEntry = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    key: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    key: ?[*:0]const u8,
     value: f64,
 };
 pub const Extent3D = extern struct {
@@ -588,7 +666,7 @@ pub const Extent3D = extern struct {
     depthOrArrayLayers: u32,
 };
 pub const InstanceDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
 };
 pub const Limits = extern struct {
     maxTextureDimension1D: u32 = 8192,
@@ -635,9 +713,9 @@ pub const PipelineLayoutDescriptor = extern struct {
     bindGroupLayoutCount: u32,
     bindGroupLayouts: ?[*]const BindGroupLayout,
 };
-pub const PrimitiveDepthClampingState = extern struct {
+pub const PrimitiveDepthClipControl = extern struct {
     chain: ChainedStruct,
-    clampDepth: bool,
+    unclippedDepth: bool,
 };
 pub const PrimitiveState = extern struct {
     nextInChain: ?*const ChainedStruct = null,
@@ -647,24 +725,26 @@ pub const PrimitiveState = extern struct {
     cullMode: CullMode,
 };
 pub const QuerySetDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     type: QueryType,
     count: u32,
     pipelineStatistics: [*c]const PipelineStatisticName,
     pipelineStatisticsCount: u32,
 };
 pub const RenderBundleDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
 };
 pub const RenderBundleEncoderDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: *const ChainedStruct,
+    label: [*:0]const u8,
     colorFormatsCount: u32,
-    colorFormats: [*c]const TextureFormat,
+    colorFormats: [*]const TextureFormat,
     depthStencilFormat: TextureFormat,
     sampleCount: u32,
+    depthReadOnly: bool,
+    stencilReadOnly: bool,
 };
 pub const RenderPassDepthStencilAttachment = extern struct {
     view: TextureView,
@@ -677,19 +757,24 @@ pub const RenderPassDepthStencilAttachment = extern struct {
     clearStencil: u32,
     stencilReadOnly: bool,
 };
+pub const RenderPassTimestampWrite = extern struct {
+    querySet: QuerySet,
+    queryIndex: u32,
+    location: RenderPassTimestampLocation,
+};
 pub const RequestAdapterOptions = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     compatibleSurface: Surface,
     powerPreference: PowerPreference,
     forceFallbackAdapter: bool,
 };
 pub const SamplerBindingLayout = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     type: SamplerBindingType,
 };
 pub const SamplerDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     addressModeU: AddressMode,
     addressModeV: AddressMode,
     addressModeW: AddressMode,
@@ -712,7 +797,7 @@ pub const ShaderModuleSPIRVDescriptor = extern struct {
 };
 pub const ShaderModuleWGSLDescriptor = extern struct {
     chain: ChainedStruct,
-    source: [*]const u8,
+    code: [*]const u8,
 };
 pub const StencilFaceState = extern struct {
     compare: CompareFunction,
@@ -721,18 +806,18 @@ pub const StencilFaceState = extern struct {
     passOp: StencilOperation,
 };
 pub const StorageTextureBindingLayout = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     access: StorageTextureAccess,
     format: TextureFormat,
     viewDimension: TextureViewDimension,
 };
 pub const SurfaceDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
 };
 pub const SurfaceDescriptorFromCanvasHTMLSelector = extern struct {
     chain: ChainedStruct,
-    selector: [*c]const u8,
+    selector: ?[*:0]const u8,
 };
 pub const SurfaceDescriptorFromMetalLayer = extern struct {
     chain: ChainedStruct,
@@ -758,20 +843,20 @@ pub const SwapChainDescriptor = extern struct {
     presentMode: PresentMode,
 };
 pub const TextureBindingLayout = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     sampleType: TextureSampleType,
     viewDimension: TextureViewDimension,
     multisampled: bool,
 };
 pub const TextureDataLayout = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     offset: u64,
     bytesPerRow: u32,
     rowsPerImage: u32,
 };
 pub const TextureViewDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     format: TextureFormat,
     dimension: TextureViewDimension,
     baseMipLevel: u32,
@@ -786,14 +871,14 @@ pub const VertexAttribute = extern struct {
     shaderLocation: u32,
 };
 pub const BindGroupDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     layout: BindGroupLayout,
     entryCount: u32,
     entries: [*c]const BindGroupEntry,
 };
 pub const BindGroupLayoutEntry = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     binding: u32,
     visibility: ShaderStageFlags,
     buffer: BufferBindingLayout,
@@ -806,12 +891,18 @@ pub const BlendState = extern struct {
     alpha: BlendComponent,
 };
 pub const CompilationInfo = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     messageCount: u32,
     messages: [*c]const CompilationMessage,
 };
+pub const ComputePassDescriptor = extern struct {
+    nextInChain: ?*const ChainedStruct,
+    label: [*:0]const u8,
+    timestampWriteCount: u32,
+    timestampWrites: [*]const ComputePassTimestampWrite,
+};
 pub const DepthStencilState = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     format: TextureFormat,
     depthWriteEnabled: bool,
     depthCompare: CompareFunction,
@@ -824,21 +915,21 @@ pub const DepthStencilState = extern struct {
     depthBiasClamp: f32,
 };
 pub const ImageCopyBuffer = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     layout: TextureDataLayout,
     buffer: Buffer,
 };
 pub const ImageCopyTexture = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     texture: Texture,
     mipLevel: u32,
     origin: Origin3D,
     aspect: TextureAspect,
 };
 pub const ProgrammableStageDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
     module: ShaderModule,
-    entryPoint: [*c]const u8,
+    entryPoint: ?[*:0]const u8,
     constantCount: u32,
     constants: [*c]const ConstantEntry,
 };
@@ -858,8 +949,8 @@ pub const SupportedLimits = extern struct {
     limits: Limits,
 };
 pub const TextureDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     usage: TextureUsageFlags,
     dimension: TextureDimension,
     size: Extent3D,
@@ -874,8 +965,8 @@ pub const VertexBufferLayout = extern struct {
     attributes: [*]const VertexAttribute,
 };
 pub const BindGroupLayoutDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     entryCount: u32,
     entries: [*c]const BindGroupLayoutEntry,
 };
@@ -887,16 +978,17 @@ pub const ColorTargetState = extern struct {
 };
 pub const ColorWriteMaskFlags = Flags;
 pub const ComputePipelineDescriptor = extern struct {
-    nextInChain: [*c]const ChainedStruct,
-    label: [*c]const u8,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     layout: PipelineLayout,
     compute: ProgrammableStageDescriptor,
 };
 pub const DeviceDescriptor = extern struct {
-    nextInChain: *const ChainedStruct,
+    nextInChain: ?*const ChainedStruct,
+    label: ?[*:0]const u8,
     requiredFeaturesCount: u32,
     requiredFeatures: [*]const FeatureName,
-    requiredLimits: [*]const RequiredLimits,
+    requiredLimits: *const RequiredLimits,
 };
 pub const RenderPassDescriptor = extern struct {
     nextInChain: ?*const ChainedStruct = null,
@@ -940,12 +1032,14 @@ pub const CreateComputePipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, C
 pub const CreateRenderPipelineAsyncCallback = ?fn (CreatePipelineAsyncStatus, RenderPipeline, [*c]const u8, ?*anyopaque) callconv(.C) void;
 pub const DeviceLostCallback = ?fn (DeviceLostReason, [*c]const u8, ?*anyopaque) callconv(.C) void;
 pub const ErrorCallback = ?fn (ErrorType, [*c]const u8, ?*anyopaque) callconv(.C) void;
+pub const CompilationInfoCallback = ?fn (CompilationInfoRequestStatus, [*c]const CompilationInfo, ?*anyopaque) callconv(.C) void;
 pub const QueueWorkDoneCallback = ?fn (QueueWorkDoneStatus, ?*anyopaque) callconv(.C) void;
 pub const RequestAdapterCallback = fn (RequestAdapterStatus, Adapter, [*:0]const u8, *anyopaque) callconv(.C) void;
 pub const RequestDeviceCallback = fn (RequestDeviceStatus, Device, [*:0]const u8, *anyopaque) callconv(.C) void;
 pub const Proc = ?fn () callconv(.C) void;
 pub const ProcCreateInstance = ?fn ([*c]const InstanceDescriptor) callconv(.C) Instance;
 pub const ProcGetProcAddress = ?fn (Device, [*c]const u8) callconv(.C) Proc;
+pub const ProcAdapterEnumerateFeatures = ?fn (Adapter, [*c]FeatureName) callconv(.C) u32;
 pub const ProcAdapterGetLimits = ?fn (Adapter, [*c]SupportedLimits) callconv(.C) bool;
 pub const ProcAdapterGetProperties = ?fn (Adapter, [*c]AdapterProperties) callconv(.C) void;
 pub const ProcAdapterHasFeature = ?fn (Adapter, FeatureName) callconv(.C) bool;
@@ -961,12 +1055,12 @@ pub const ProcCommandEncoderCopyBufferToBuffer = ?fn (CommandEncoder, Buffer, u6
 pub const ProcCommandEncoderCopyBufferToTexture = ?fn (CommandEncoder, [*c]const ImageCopyBuffer, [*c]const ImageCopyTexture, [*c]const Extent3D) callconv(.C) void;
 pub const ProcCommandEncoderCopyTextureToBuffer = ?fn (CommandEncoder, [*c]const ImageCopyTexture, [*c]const ImageCopyBuffer, [*c]const Extent3D) callconv(.C) void;
 pub const ProcCommandEncoderCopyTextureToTexture = ?fn (CommandEncoder, [*c]const ImageCopyTexture, [*c]const ImageCopyTexture, [*c]const Extent3D) callconv(.C) void;
+pub const ProcCommandEncoderFillBuffer = ?fn (CommandEncoder, Buffer, u64, u64, u8) callconv(.C) void;
 pub const ProcCommandEncoderFinish = ?fn (CommandEncoder, [*c]const CommandBufferDescriptor) callconv(.C) CommandBuffer;
 pub const ProcCommandEncoderInsertDebugMarker = ?fn (CommandEncoder, [*c]const u8) callconv(.C) void;
 pub const ProcCommandEncoderPopDebugGroup = ?fn (CommandEncoder) callconv(.C) void;
 pub const ProcCommandEncoderPushDebugGroup = ?fn (CommandEncoder, [*c]const u8) callconv(.C) void;
 pub const ProcCommandEncoderResolveQuerySet = ?fn (CommandEncoder, QuerySet, u32, u32, Buffer, u64) callconv(.C) void;
-pub const ProcCommandEncoderWriteTimestamp = ?fn (CommandEncoder, QuerySet, u32) callconv(.C) void;
 pub const ProcComputePassEncoderBeginPipelineStatisticsQuery = ?fn (ComputePassEncoder, QuerySet, u32) callconv(.C) void;
 pub const ProcComputePassEncoderDispatch = ?fn (ComputePassEncoder, u32, u32, u32) callconv(.C) void;
 pub const ProcComputePassEncoderDispatchIndirect = ?fn (ComputePassEncoder, Buffer, u64) callconv(.C) void;
@@ -996,8 +1090,10 @@ pub const ProcDeviceCreateShaderModule = ?fn (Device, [*c]const ShaderModuleDesc
 pub const ProcDeviceCreateSwapChain = ?fn (Device, Surface, [*c]const SwapChainDescriptor) callconv(.C) SwapChain;
 pub const ProcDeviceCreateTexture = ?fn (Device, [*c]const TextureDescriptor) callconv(.C) Texture;
 pub const ProcDeviceDestroy = ?fn (Device) callconv(.C) void;
+pub const ProcDeviceEnumerateFeatures = ?fn (Device, [*c]FeatureName) callconv(.C) u32;
 pub const ProcDeviceGetLimits = ?fn (Device, [*c]SupportedLimits) callconv(.C) bool;
 pub const ProcDeviceGetQueue = ?fn (Device) callconv(.C) Queue;
+pub const ProcDeviceHasFeature = ?fn (Device, FeatureName) callconv(.C) bool;
 pub const ProcDevicePopErrorScope = ?fn (Device, ErrorCallback, ?*anyopaque) callconv(.C) bool;
 pub const ProcDevicePushErrorScope = ?fn (Device, ErrorFilter) callconv(.C) void;
 pub const ProcDeviceSetDeviceLostCallback = ?fn (Device, DeviceLostCallback, ?*anyopaque) callconv(.C) void;
@@ -1043,10 +1139,10 @@ pub const ProcRenderPassEncoderSetScissorRect = ?fn (RenderPassEncoder, u32, u32
 pub const ProcRenderPassEncoderSetStencilReference = ?fn (RenderPassEncoder, u32) callconv(.C) void;
 pub const ProcRenderPassEncoderSetVertexBuffer = ?fn (RenderPassEncoder, u32, Buffer, u64, u64) callconv(.C) void;
 pub const ProcRenderPassEncoderSetViewport = ?fn (RenderPassEncoder, f32, f32, f32, f32, f32, f32) callconv(.C) void;
-pub const ProcRenderPassEncoderWriteTimestamp = ?fn (RenderPassEncoder, QuerySet, u32) callconv(.C) void;
 pub const ProcRenderPipelineGetBindGroupLayout = ?fn (RenderPipeline, u32) callconv(.C) BindGroupLayout;
 pub const ProcRenderPipelineSetLabel = ?fn (RenderPipeline, [*c]const u8) callconv(.C) void;
 pub const ProcShaderModuleSetLabel = ?fn (ShaderModule, [*c]const u8) callconv(.C) void;
+pub const ProcShaderModuleGetCompilationInfo = ?fn (ShaderModule, CompilationInfoCallback, ?*anyopaque) callconv(.C) void;
 pub const ProcSurfaceGetPreferredFormat = ?fn (Surface, Adapter) callconv(.C) TextureFormat;
 pub const ProcSwapChainGetCurrentTextureView = ?fn (SwapChain) callconv(.C) TextureView;
 pub const ProcSwapChainPresent = ?fn (SwapChain) callconv(.C) void;
@@ -1054,7 +1150,8 @@ pub const ProcTextureCreateView = ?fn (Texture, [*c]const TextureViewDescriptor)
 pub const ProcTextureDestroy = ?fn (Texture) callconv(.C) void;
 pub extern fn wgpuCreateInstance(descriptor: [*c]const InstanceDescriptor) Instance;
 pub extern fn wgpuGetProcAddress(device: Device, procName: [*c]const u8) Proc;
-pub extern fn wgpuAdapterGetLimits(adapter: Adapter, limits: [*c]SupportedLimits) bool;
+pub extern fn wgpuAdapterEnumerateFeatures(adapter: Adapter, features: [*]FeatureName) u32;
+pub extern fn wgpuAdapterGetLimits(adapter: Adapter, limits: *SupportedLimits) bool;
 pub extern fn wgpuAdapterGetProperties(adapter: Adapter, properties: *AdapterProperties) void;
 pub extern fn wgpuAdapterHasFeature(adapter: Adapter, feature: FeatureName) bool;
 pub extern fn wgpuAdapterRequestDevice(adapter: Adapter, descriptor: *const DeviceDescriptor, callback: RequestDeviceCallback, userdata: *anyopaque) void;
@@ -1069,12 +1166,12 @@ pub extern fn wgpuCommandEncoderCopyBufferToBuffer(commandEncoder: CommandEncode
 pub extern fn wgpuCommandEncoderCopyBufferToTexture(commandEncoder: CommandEncoder, source: [*c]const ImageCopyBuffer, destination: [*c]const ImageCopyTexture, copySize: [*c]const Extent3D) void;
 pub extern fn wgpuCommandEncoderCopyTextureToBuffer(commandEncoder: CommandEncoder, source: [*c]const ImageCopyTexture, destination: [*c]const ImageCopyBuffer, copySize: [*c]const Extent3D) void;
 pub extern fn wgpuCommandEncoderCopyTextureToTexture(commandEncoder: CommandEncoder, source: [*c]const ImageCopyTexture, destination: [*c]const ImageCopyTexture, copySize: [*c]const Extent3D) void;
+pub extern fn wgpuCommandEncoderFillBuffer(commandEncoder: CommandEncoder, destination: Buffer, destinationOffset: u64, size: u64, value: u8) void;
 pub extern fn wgpuCommandEncoderFinish(commandEncoder: CommandEncoder, descriptor: *const CommandBufferDescriptor) CommandBuffer;
 pub extern fn wgpuCommandEncoderInsertDebugMarker(commandEncoder: CommandEncoder, markerLabel: [*c]const u8) void;
 pub extern fn wgpuCommandEncoderPopDebugGroup(commandEncoder: CommandEncoder) void;
 pub extern fn wgpuCommandEncoderPushDebugGroup(commandEncoder: CommandEncoder, groupLabel: [*c]const u8) void;
 pub extern fn wgpuCommandEncoderResolveQuerySet(commandEncoder: CommandEncoder, querySet: QuerySet, firstQuery: u32, queryCount: u32, destination: Buffer, destinationOffset: u64) void;
-pub extern fn wgpuCommandEncoderWriteTimestamp(commandEncoder: CommandEncoder, querySet: QuerySet, queryIndex: u32) void;
 pub extern fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(computePassEncoder: ComputePassEncoder, querySet: QuerySet, queryIndex: u32) void;
 pub extern fn wgpuComputePassEncoderDispatch(computePassEncoder: ComputePassEncoder, x: u32, y: u32, z: u32) void;
 pub extern fn wgpuComputePassEncoderDispatchIndirect(computePassEncoder: ComputePassEncoder, indirectBuffer: Buffer, indirectOffset: u64) void;
@@ -1104,8 +1201,10 @@ pub extern fn wgpuDeviceCreateShaderModule(device: Device, descriptor: *const Sh
 pub extern fn wgpuDeviceCreateSwapChain(device: Device, surface: Surface, descriptor: *const SwapChainDescriptor) SwapChain;
 pub extern fn wgpuDeviceCreateTexture(device: Device, descriptor: [*c]const TextureDescriptor) Texture;
 pub extern fn wgpuDeviceDestroy(device: Device) void;
-pub extern fn wgpuDeviceGetLimits(device: Device, limits: [*c]SupportedLimits) bool;
+pub extern fn wgpuDeviceEnumerateFeatures(device: Device, features: [*]FeatureName) u32;
+pub extern fn wgpuDeviceGetLimits(device: Device, limits: *SupportedLimits) bool;
 pub extern fn wgpuDeviceGetQueue(device: Device) Queue;
+pub extern fn wgpuDeviceHasFeature(device: Device, feature: FeatureName) bool;
 pub extern fn wgpuDevicePopErrorScope(device: Device, callback: ErrorCallback, userdata: ?*anyopaque) bool;
 pub extern fn wgpuDevicePushErrorScope(device: Device, filter: ErrorFilter) void;
 pub extern fn wgpuDeviceSetDeviceLostCallback(device: Device, callback: DeviceLostCallback, userdata: ?*anyopaque) void;
@@ -1151,10 +1250,10 @@ pub extern fn wgpuRenderPassEncoderSetScissorRect(renderPassEncoder: RenderPassE
 pub extern fn wgpuRenderPassEncoderSetStencilReference(renderPassEncoder: RenderPassEncoder, reference: u32) void;
 pub extern fn wgpuRenderPassEncoderSetVertexBuffer(renderPassEncoder: RenderPassEncoder, slot: u32, buffer: Buffer, offset: u64, size: u64) void;
 pub extern fn wgpuRenderPassEncoderSetViewport(renderPassEncoder: RenderPassEncoder, x: f32, y: f32, width: f32, height: f32, minDepth: f32, maxDepth: f32) void;
-pub extern fn wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: RenderPassEncoder, querySet: QuerySet, queryIndex: u32) void;
 pub extern fn wgpuRenderPipelineGetBindGroupLayout(renderPipeline: RenderPipeline, groupIndex: u32) BindGroupLayout;
 pub extern fn wgpuRenderPipelineSetLabel(renderPipeline: RenderPipeline, label: [*c]const u8) void;
 pub extern fn wgpuShaderModuleSetLabel(shaderModule: ShaderModule, label: [*c]const u8) void;
+pub extern fn wgpuShaderModuleGetCompilationInfo(shaderModule: ShaderModule, callback: CompilationInfoCallback, userdata: ?*anyopaque) void;
 pub extern fn wgpuSurfaceGetPreferredFormat(surface: Surface, adapter: Adapter) TextureFormat;
 pub extern fn wgpuSwapChainGetCurrentTextureView(swapChain: SwapChain) TextureView;
 pub extern fn wgpuSwapChainPresent(swapChain: SwapChain) void;
@@ -1163,7 +1262,7 @@ pub extern fn wgpuTextureDestroy(texture: Texture) void;
 
 // wgpu-native
 pub const NativeFeature = enum(i32) {
-    TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES = 268435456,
+    texture_adapter_specific_format_features = 268435456,
 };
 
 // wgpu-native
@@ -1187,7 +1286,7 @@ pub const DeviceExtras = extern struct {
     label: [*:0]const u8,
     tracePath: ?[*:0]const u8,
 };
-pub const LogCallback = ?fn (LogLevel, [*c]const u8) callconv(.C) void;
+pub const LogCallback = fn (LogLevel, [*:0]const u8) callconv(.C) void;
 pub extern fn wgpuDevicePoll(device: Device, force_wait: bool) void;
 pub extern fn wgpuSetLogCallback(callback: LogCallback) void;
 pub extern fn wgpuSetLogLevel(level: LogLevel) void;
@@ -1209,6 +1308,7 @@ pub extern fn wgpuCommandBufferDrop(commandBuffer: CommandBuffer) void;
 pub extern fn wgpuRenderBundleDrop(renderBundle: RenderBundle) void;
 pub extern fn wgpuComputePipelineDrop(computePipeline: ComputePipeline) void;
 pub const WHOLE_SIZE = @as(c_ulonglong, 0xffffffffffffffff);
+pub const WHOLE_MAP_SIZE = @as(c_ulonglong, 18446744073709551615);
 pub const COPY_STRIDE_UNDEFINED = @as(c_ulong, 0xffffffff);
 pub const LIMIT_U32_UNDEFINED = @as(c_ulong, 0xffffffff);
 pub const LIMIT_U64_UNDEFINED = @as(c_ulonglong, 0xffffffffffffffff);
