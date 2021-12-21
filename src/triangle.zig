@@ -3,6 +3,8 @@ const glfw = @import("glfw");
 const kn = std.os.windows.kernel32;
 const builtin = @import("builtin");
 const triangle_shader = @embedFile("shader/triangle.wgsl");
+const spv_vert = @embedFile("shader/triangle.vert");
+const spv_frag = @embedFile("shader/triangle.frag");
 const Wgpu = @import("Wgpu.zig");
 const Gfx = @import("Gfx.zig");
 
@@ -46,27 +48,22 @@ const indices = [_]Index{
 };
 
 pub fn createPipeline(gfx: Gfx, vertex_layout: *const Wgpu.VertexBufferLayout) Wgpu.RenderPipeline {
-    const shader = gfx.wb.deviceCreateShaderModule(gfx.device, &.{
-        .nextInChain = Wgpu.toChainedStruct(&Wgpu.ShaderModuleWGSLDescriptor{
-            .chain = .{
-                .next = null,
-                .sType = .ShaderModuleWGSLDescriptor,
-            },
-            .source = triangle_shader,
-        }),
-        .label = null,
-    });
+    const vertex_module = gfx.createShader(.spirv, spv_vert);
+    defer gfx.wb.shaderModuleDrop(vertex_module);
+    const fragment_module = gfx.createShader(.spirv, spv_frag);
+    defer gfx.wb.shaderModuleDrop(fragment_module);
     const pipeline_layout = gfx.wb.deviceCreatePipelineLayout(gfx.device, &.{
         .bindGroupLayoutCount = 0,
         .bindGroupLayouts = null,
     });
+    defer gfx.wb.pipelineLayoutDrop(pipeline_layout);
 
     return gfx.wb.deviceCreateRenderPipeline(gfx.device, &(Wgpu.RenderPipelineDescriptor){
         .label = "Render pipeline",
         .layout = pipeline_layout,
         .vertex = .{
-            .module = shader,
-            .entryPoint = "vertex_main",
+            .module = vertex_module,
+            .entryPoint = "main",
             .constantCount = 0,
             .constants = undefined,
             // Note: remeber change this with buffer layout
@@ -85,8 +82,8 @@ pub fn createPipeline(gfx: Gfx, vertex_layout: *const Wgpu.VertexBufferLayout) W
             .alphaToCoverageEnabled = false,
         },
         .fragment = &.{
-            .module = shader,
-            .entryPoint = "fragment_main",
+            .module = fragment_module,
+            .entryPoint = "main",
             .targetCount = 1,
             .targets = @ptrCast([*]const Wgpu.ColorTargetState, &Wgpu.ColorTargetState{
                 .format = gfx.getSwapchainFormat(),
@@ -120,6 +117,7 @@ pub fn main() anyerror!void {
     });
 
     var gfx = try Gfx.init(wb, window);
+    gfx.initializeLog();
 
     const vertex_buffer = gfx.createBufferFromData(&vertices, .{ .Vertex = true }, @sizeOf(@TypeOf(vertices)));
     defer gfx.wb.bufferDestroy(vertex_buffer);
@@ -133,6 +131,7 @@ pub fn main() anyerror!void {
     };
 
     const pipeline = createPipeline(gfx, &vsl);
+    defer gfx.wb.renderPipelineDrop(pipeline);
     while (!window.shouldClose()) {
         try gfx.beginFrame();
         gfx.bindPipeline(pipeline);

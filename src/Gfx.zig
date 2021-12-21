@@ -6,8 +6,10 @@ const Wgpu = @import("Wgpu.zig");
 const Gfx = @This();
 
 device: Wgpu.Device,
+is_device: bool = false,
 surface: Wgpu.Surface,
 adapter: Wgpu.Adapter,
+is_adapter: bool = false,
 queue: Wgpu.Queue,
 
 swapchain: Wgpu.SwapChain,
@@ -18,6 +20,11 @@ window: glfw.Window,
 wb: Wgpu,
 encoder: Wgpu.CommandEncoder,
 render_pass: Wgpu.RenderPassEncoder,
+
+const ShaderType = enum {
+    spirv,
+    wgsl,
+};
 
 pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
     const use_discrete_gpu = true;
@@ -42,6 +49,11 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
         }),
     });
     wb.instanceRequestAdapter(.null_handle, &.{
+        // selectable backend,
+        // .nextInChain = Wgpu.toChainedStruct(&Wgpu.AdapterExtras{
+        //     .chain = .{ .next = null, .sType = .AdapterExtras },
+        //     .backend = .Vulkan,
+        // }),
         .nextInChain = null,
         .compatibleSurface = gfx.surface,
         .powerPreference = if (use_discrete_gpu) .HighPerformance else .LowPower,
@@ -54,22 +66,22 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
         @tagName(properties.backendType),
         @tagName(properties.adapterType),
     });
-
     wb.adapterRequestDevice(gfx.adapter, &.{
         .nextInChain = Wgpu.toChainedStruct(
-            &Wgpu.DeviceExtras{ .chain = .{
-                .next = null,
-                .sType = .DeviceExtras,
-            }, .nativeFeatures = undefined, .label = "Device", .tracePath = null },
-        ),
-        .requiredLimits = @ptrCast([*]const Wgpu.RequiredLimits, &Wgpu.RequiredLimits{
-            .nextInChain = null,
-            .limits = .{
-                .maxBindGroups = 1,
+            &Wgpu.DeviceExtras{
+                .chain = .{ .next = null, .sType = .DeviceExtras },
+                .nativeFeatures = undefined,
+                .label = "Device",
+                .tracePath = null,
             },
-        }),
-        .requiredFeaturesCount = 0,
-        .requiredFeatures = undefined,
+        ),
+        .label = null,
+        .requiredLimits = &.{
+            .nextInChain = null,
+            .limits = undefined,
+        },
+        .requiredFeaturesCount = 1,
+        .requiredFeatures = @ptrCast([*]const Wgpu.FeatureName, &Wgpu.FeatureName.Undefined),
     }, requestDeviceCallback, @ptrCast(*anyopaque, &gfx));
 
     const size = try window.getSize();
@@ -113,30 +125,19 @@ pub fn bindPipeline(gfx: Gfx, pipeline: Wgpu.RenderPipeline) void {
 }
 
 pub fn draw(gfx: Gfx, vertex_buffer: Wgpu.Buffer, index_buffer: Wgpu.Buffer, indices_count: u32) void {
-    // gfx.wb.renderPassEncoderDraw(gfx.render_pass, 3, 1, 0, 0);
-
-    // Bind triangle vertex buffer (contains position and colors)
-    // wgpuRenderPassEncoderSetVertexBuffer(wgpu_context->rpass_enc, 0,
-    //                                      vertices.buffer, 0, WGPU_WHOLE_SIZE);
     gfx.wb.renderPassEncoderSetVertexBuffer(gfx.render_pass, 0, vertex_buffer, 0, Wgpu.WHOLE_SIZE);
-
-    // Bind triangle index buffer
-    // wgpuRenderPassEncoderSetIndexBuffer(wgpu_context->rpass_enc, indices.buffer,
-    //                                     WGPUIndexFormat_Uint16, 0,
-    //                                     WGPU_WHOLE_SIZE);
     gfx.wb.renderPassEncoderSetIndexBuffer(gfx.render_pass, index_buffer, .Uint16, 0, Wgpu.WHOLE_SIZE);
-
-    // Draw indexed triangle
-    // wgpuRenderPassEncoderDrawIndexed(wgpu_context->rpass_enc, indices.count, 1, 0,
-    //                                  0, 0);
     gfx.wb.renderPassEncoderDrawIndexed(gfx.render_pass, indices_count, 1, 0, 0, 0);
 }
 
 pub fn endFrame(gfx: *Gfx) void {
+
     gfx.wb.renderPassEncoderEndPass(gfx.render_pass);
     const cmd_buffer = gfx.wb.commandEncoderFinish(gfx.encoder, &.{ .label = null });
     gfx.wb.queueSubmit(gfx.queue, 1, @ptrCast([*]const Wgpu.CommandBuffer, &cmd_buffer));
     gfx.wb.swapChainPresent(gfx.swapchain);
+
+    gfx.wb.textureViewDrop(gfx.frame_buffer);
 }
 
 /// Note: remeber change this with buffer layout
@@ -175,26 +176,74 @@ pub fn queueWriteBuffer(gfx: Gfx, buffer: Wgpu.Buffer, offset: usize, data: anyt
     gfx.wb.queueWriteBuffer(gfx.queue, buffer, offset, @ptrCast(*const anyopaque, data), size);
 }
 
-fn requestAdapterCallback(
+pub fn createShader(gfx: Gfx, shader_type: ShaderType, data: []const u8) Wgpu.ShaderModule {
+    const shader_des: Wgpu.ShaderModuleDescriptor = switch (shader_type) {
+        .spirv => .{
+            .nextInChain = Wgpu.toChainedStruct(&Wgpu.ShaderModuleSPIRVDescriptor{
+                .chain = .{
+                    .next = null,
+                    .sType = .ShaderModuleSPIRVDescriptor,
+                },
+                .codeSize = @truncate(u32, data.len) / @sizeOf(u32),
+                .code = @ptrCast([*]const u32, @alignCast(@alignOf(u32), data.ptr)),
+            }),
+            .label = null,
+        },
+        .wgsl => .{
+            .nextInChain = Wgpu.toChainedStruct(&Wgpu.ShaderModuleWGSLDescriptor{
+                .chain = .{
+                    .next = null,
+                    .sType = .ShaderModuleWGSLDescriptor,
+                },
+                .code = data.ptr,
+            }),
+            .label = null,
+        },
+    };
+    return gfx.wb.deviceCreateShaderModule(gfx.device, &shader_des);
+}
+
+export fn requestAdapterCallback(
     status: Wgpu.RequestAdapterStatus,
     received: Wgpu.Adapter,
     message: [*:0]const u8,
     userdata: *anyopaque,
-) callconv(.C) void {
-    _ = status;
+) void {
     _ = message;
-    var gfx = @ptrCast(*Gfx, @alignCast(@alignOf(Gfx), userdata));
-    gfx.adapter = received;
+    switch (status) {
+        .Success => {
+            var gfx = @ptrCast(*Gfx, @alignCast(@alignOf(Gfx), userdata));
+            gfx.adapter = received;
+            gfx.is_adapter = true;
+        },
+        .Unavailable, .Error, .Unknown => std.log.err("Can't aquire adapter {s}", .{@tagName(status)}),
+        else => unreachable,
+    }
 }
 
-fn requestDeviceCallback(
+export fn requestDeviceCallback(
     status: Wgpu.RequestDeviceStatus,
     received: Wgpu.Device,
     message: [*:0]const u8,
     userdata: *anyopaque,
-) callconv(.C) void {
-    _ = status;
+) void {
     _ = message;
-    var gfx = @ptrCast(*Gfx, @alignCast(@alignOf(Gfx), userdata));
-    gfx.device = received;
+    switch (status) {
+        .Success => {
+            var gfx = @ptrCast(*Gfx, @alignCast(@alignOf(Gfx), userdata));
+            gfx.device = received;
+            gfx.is_device = true;
+        },
+        .Error, .Unknown => std.log.err("Can't aquire device {s}", .{@tagName(status)}),
+        else => unreachable,
+    }
+}
+
+export fn logCallback(level: Wgpu.LogLevel, msg: [*:0]const u8) void {
+    std.log.info("[{s}] {s}", .{ @tagName(level), msg });
+}
+
+pub fn initializeLog(gfx: Gfx) void {
+    gfx.wb.setLogCallback(logCallback);
+    gfx.wb.setLogLevel(.Info);
 }
