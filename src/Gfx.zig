@@ -15,6 +15,7 @@ queue: Wgpu.Queue,
 swapchain: Wgpu.SwapChain,
 frame_buffer: Wgpu.TextureView,
 swapchain_des: Wgpu.SwapChainDescriptor,
+depth_stencil: Depthstencil,
 
 window: glfw.Window,
 wb: Wgpu,
@@ -24,6 +25,11 @@ render_pass: Wgpu.RenderPassEncoder,
 const ShaderType = enum {
     spirv,
     wgsl,
+};
+const Depthstencil = struct {
+    texture: Wgpu.Texture,
+    view: Wgpu.TextureView,
+    att_desc: Wgpu.RenderPassDepthStencilAttachment,
 };
 
 pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
@@ -94,8 +100,48 @@ pub fn init(wb: Wgpu, window: glfw.Window) !Gfx {
     };
     gfx.swapchain = wb.deviceCreateSwapChain(gfx.device, gfx.surface, &gfx.swapchain_des);
     gfx.queue = wb.deviceGetQueue(gfx.device);
+    gfx.createDepthStencil();
 
     return gfx;
+}
+
+pub fn createDepthStencil(gfx: *Gfx) void {
+    const depth_texture_desc = Wgpu.TextureDescriptor{
+        .usage = .{ .RenderAttachment = true},
+        .format = .Depth24PlusStencil8,
+        .dimension = .@"2D",
+        .mipLevelCount = 1,
+        .sampleCount = 1,
+        .size = .{
+            .width = gfx.swapchain_des.width,
+            .height = gfx.swapchain_des.height,
+            .depthOrArrayLayers = 1,
+        },
+    };
+    gfx.depth_stencil.texture = gfx.wb.deviceCreateTexture(gfx.device, &depth_texture_desc);
+
+    const depth_texture_view_dec = Wgpu.TextureViewDescriptor{
+        .format = depth_texture_desc.format,
+        .dimension = .@"2D",
+        .baseMipLevel = 0,
+        .mipLevelCount = 1,
+        .baseArrayLayer = 0,
+        .arrayLayerCount = 1,
+        .aspect = .All,
+    };
+    gfx.depth_stencil.view = gfx.wb.textureCreateView(gfx.depth_stencil.texture, &depth_texture_view_dec);
+
+    gfx.depth_stencil.att_desc = Wgpu.RenderPassDepthStencilAttachment{
+        .view = gfx.depth_stencil.view,
+        .depthLoadOp = .Clear,
+        .depthStoreOp = .Store,
+        .clearDepth = 1.0,
+        .depthReadOnly = false,
+        .stencilLoadOp = .Clear,
+        .stencilStoreOp = .Store,
+        .clearStencil = 0,
+        .stencilReadOnly = false,
+    };
 }
 
 pub fn beginFrame(gfx: *Gfx) !void {
@@ -115,7 +161,7 @@ pub fn beginFrame(gfx: *Gfx) !void {
             },
         }),
         .colorAttachmentCount = 1,
-        .depthStencilAttachment = null,
+        .depthStencilAttachment = &gfx.depth_stencil.att_desc,
         .occlusionQuerySet = undefined,
     });
 }
@@ -131,7 +177,6 @@ pub fn draw(gfx: Gfx, vertex_buffer: Wgpu.Buffer, index_buffer: Wgpu.Buffer, ind
 }
 
 pub fn endFrame(gfx: *Gfx) void {
-
     gfx.wb.renderPassEncoderEndPass(gfx.render_pass);
     const cmd_buffer = gfx.wb.commandEncoderFinish(gfx.encoder, &.{ .label = null });
     gfx.wb.queueSubmit(gfx.queue, 1, @ptrCast([*]const Wgpu.CommandBuffer, &cmd_buffer));
@@ -172,6 +217,16 @@ pub fn createBufferFromData(gfx: Gfx, data: anytype, usage: Wgpu.BufferUsage, si
     return buffer;
 }
 
+pub fn createUniformBuffer(gfx: Gfx, usage: Wgpu.BufferUsage, size: usize, label: [*:0]const u8) Wgpu.Buffer {
+    const usage_flag = usage.merge(.{ .CopyDst = true, .Uniform = true });
+    const buffer = gfx.wb.deviceCreateBuffer(gfx.device, &.{
+        .label = label,
+        .usage = usage_flag,
+        .size = size,
+        .mappedAtCreation = false,
+    });
+    return buffer;
+}
 pub fn queueWriteBuffer(gfx: Gfx, buffer: Wgpu.Buffer, offset: usize, data: anytype, size: usize) void {
     gfx.wb.queueWriteBuffer(gfx.queue, buffer, offset, @ptrCast(*const anyopaque, data), size);
 }
@@ -201,6 +256,10 @@ pub fn createShader(gfx: Gfx, shader_type: ShaderType, data: []const u8) Wgpu.Sh
         },
     };
     return gfx.wb.deviceCreateShaderModule(gfx.device, &shader_des);
+}
+
+pub fn getAspecRatio(gfx: Gfx) f32 {
+    return gfx.swapchain_des.width / gfx.swapchain_des.height;
 }
 
 export fn requestAdapterCallback(
@@ -245,5 +304,6 @@ export fn logCallback(level: Wgpu.LogLevel, msg: [*:0]const u8) void {
 
 pub fn initializeLog(gfx: Gfx) void {
     gfx.wb.setLogCallback(logCallback);
+    // gfx.wb.setLogLevel(.Debug);
     gfx.wb.setLogLevel(.Info);
 }

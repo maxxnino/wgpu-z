@@ -557,12 +557,18 @@ pub const MapMode = enum(i32) {
     Write = 2,
     _,
 };
-pub const ShaderStage = enum(i32) {
-    None = 0,
-    Vertex = 1,
-    Fragment = 2,
-    Compute = 4,
-    _,
+pub const ShaderStage = packed struct {
+    Vertex: bool = false,
+    Fragment: bool = false,
+    Compute: bool = false,
+    _reserved_bit_3: bool = false,
+    _reserved_04_31: u28 = 0,
+
+    const Self = @This();
+    comptime {
+        std.debug.assert(@sizeOf(Self) == @sizeOf(Flags));
+    }
+    pub usingnamespace FlagsMixin(Self, Flags);
 };
 pub const TextureUsage = packed struct {
     CopySrc: bool = false,
@@ -601,7 +607,7 @@ pub const AdapterProperties = extern struct {
     backendType: BackendType,
 };
 pub const BindGroupEntry = extern struct {
-    nextInChain: ?*const ChainedStruct,
+    nextInChain: ?*const ChainedStruct = null,
     binding: u32,
     buffer: Buffer,
     offset: u64,
@@ -615,7 +621,7 @@ pub const BlendComponent = extern struct {
     dstFactor: BlendFactor,
 };
 pub const BufferBindingLayout = extern struct {
-    nextInChain: ?*const ChainedStruct,
+    nextInChain: ?*const ChainedStruct = null,
     type: BufferBindingType,
     hasDynamicOffset: bool,
     minBindingSize: u64,
@@ -855,8 +861,8 @@ pub const TextureDataLayout = extern struct {
     rowsPerImage: u32,
 };
 pub const TextureViewDescriptor = extern struct {
-    nextInChain: ?*const ChainedStruct,
-    label: ?[*:0]const u8,
+    nextInChain: ?*const ChainedStruct = null,
+    label: ?[*:0]const u8 = null,
     format: TextureFormat,
     dimension: TextureViewDimension,
     baseMipLevel: u32,
@@ -871,16 +877,16 @@ pub const VertexAttribute = extern struct {
     shaderLocation: u32,
 };
 pub const BindGroupDescriptor = extern struct {
-    nextInChain: ?*const ChainedStruct,
-    label: ?[*:0]const u8,
+    nextInChain: ?*const ChainedStruct = null,
+    label: ?[*:0]const u8 = null,
     layout: BindGroupLayout,
     entryCount: u32,
-    entries: [*c]const BindGroupEntry,
+    entries: [*]const BindGroupEntry,
 };
 pub const BindGroupLayoutEntry = extern struct {
-    nextInChain: ?*const ChainedStruct,
+    nextInChain: ?*const ChainedStruct = null,
     binding: u32,
-    visibility: ShaderStageFlags,
+    visibility: ShaderStage,
     buffer: BufferBindingLayout,
     sampler: SamplerBindingLayout,
     texture: TextureBindingLayout,
@@ -945,13 +951,13 @@ pub const RequiredLimits = extern struct {
     limits: Limits,
 };
 pub const SupportedLimits = extern struct {
-    nextInChain: [*c]ChainedStructOut,
+    nextInChain: ?*ChainedStructOut,
     limits: Limits,
 };
 pub const TextureDescriptor = extern struct {
-    nextInChain: ?*const ChainedStruct,
-    label: ?[*:0]const u8,
-    usage: TextureUsageFlags,
+    nextInChain: ?*const ChainedStruct = null,
+    label: ?[*:0]const u8 = null,
+    usage: TextureUsage,
     dimension: TextureDimension,
     size: Extent3D,
     format: TextureFormat,
@@ -965,10 +971,10 @@ pub const VertexBufferLayout = extern struct {
     attributes: [*]const VertexAttribute,
 };
 pub const BindGroupLayoutDescriptor = extern struct {
-    nextInChain: ?*const ChainedStruct,
-    label: ?[*:0]const u8,
+    nextInChain: ?*const ChainedStruct = null,
+    label: ?[*:0]const u8 = null,
     entryCount: u32,
-    entries: [*c]const BindGroupLayoutEntry,
+    entries: [*]const BindGroupLayoutEntry,
 };
 pub const ColorTargetState = extern struct {
     nextInChain: ?*const ChainedStruct = null,
@@ -1185,8 +1191,8 @@ pub extern fn wgpuComputePassEncoderSetPipeline(computePassEncoder: ComputePassE
 pub extern fn wgpuComputePassEncoderWriteTimestamp(computePassEncoder: ComputePassEncoder, querySet: QuerySet, queryIndex: u32) void;
 pub extern fn wgpuComputePipelineGetBindGroupLayout(computePipeline: ComputePipeline, groupIndex: u32) BindGroupLayout;
 pub extern fn wgpuComputePipelineSetLabel(computePipeline: ComputePipeline, label: [*c]const u8) void;
-pub extern fn wgpuDeviceCreateBindGroup(device: Device, descriptor: [*c]const BindGroupDescriptor) BindGroup;
-pub extern fn wgpuDeviceCreateBindGroupLayout(device: Device, descriptor: [*c]const BindGroupLayoutDescriptor) BindGroupLayout;
+pub extern fn wgpuDeviceCreateBindGroup(device: Device, descriptor: *const BindGroupDescriptor) BindGroup;
+pub extern fn wgpuDeviceCreateBindGroupLayout(device: Device, descriptor: *const BindGroupLayoutDescriptor) BindGroupLayout;
 pub extern fn wgpuDeviceCreateBuffer(device: Device, descriptor: *const BufferDescriptor) Buffer;
 pub extern fn wgpuDeviceCreateCommandEncoder(device: Device, descriptor: *const CommandEncoderDescriptor) CommandEncoder;
 pub extern fn wgpuDeviceCreateComputePipeline(device: Device, descriptor: [*c]const ComputePipelineDescriptor) ComputePipeline;
@@ -1242,7 +1248,7 @@ pub extern fn wgpuRenderPassEncoderExecuteBundles(renderPassEncoder: RenderPassE
 pub extern fn wgpuRenderPassEncoderInsertDebugMarker(renderPassEncoder: RenderPassEncoder, markerLabel: [*c]const u8) void;
 pub extern fn wgpuRenderPassEncoderPopDebugGroup(renderPassEncoder: RenderPassEncoder) void;
 pub extern fn wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: RenderPassEncoder, groupLabel: [*c]const u8) void;
-pub extern fn wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: RenderPassEncoder, groupIndex: u32, group: BindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*c]const u32) void;
+pub extern fn wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: RenderPassEncoder, groupIndex: u32, group: BindGroup, dynamicOffsetCount: u32, dynamicOffsets: [*]const u32) void;
 pub extern fn wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: RenderPassEncoder, color: [*c]const Color) void;
 pub extern fn wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: RenderPassEncoder, buffer: Buffer, format: IndexFormat, offset: u64, size: u64) void;
 pub extern fn wgpuRenderPassEncoderSetPipeline(renderPassEncoder: RenderPassEncoder, pipeline: RenderPipeline) void;

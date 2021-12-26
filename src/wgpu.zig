@@ -30,7 +30,13 @@ renderPassEncoderSetIndexBuffer: @TypeOf(Wgpu.wgpuRenderPassEncoderSetIndexBuffe
 renderPassEncoderDrawIndexed: @TypeOf(Wgpu.wgpuRenderPassEncoderDrawIndexed),
 setLogCallback: @TypeOf(Wgpu.wgpuSetLogCallback),
 setLogLevel: @TypeOf(Wgpu.wgpuSetLogLevel),
+deviceGetLimits: @TypeOf(Wgpu.wgpuDeviceGetLimits),
+deviceCreateBindGroupLayout: @TypeOf(Wgpu.wgpuDeviceCreateBindGroupLayout),
+deviceCreateBindGroup: @TypeOf(Wgpu.wgpuDeviceCreateBindGroup),
+renderPassEncoderSetBindGroup: @TypeOf(Wgpu.wgpuRenderPassEncoderSetBindGroup),
 
+deviceCreateTexture: @TypeOf(Wgpu.wgpuDeviceCreateTexture),
+textureCreateView: @TypeOf(Wgpu.wgpuTextureCreateView),
 textureViewDrop: @TypeOf(Wgpu.wgpuTextureViewDrop),
 
 bufferDrop: @TypeOf(Wgpu.wgpuBufferDrop),
