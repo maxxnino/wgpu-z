@@ -204,6 +204,10 @@ pub fn recreateSwapChain(gfx: *Gfx, width: u32, height: u32, present_mode: Wgpu.
     gfx.swapchain_des.height = height;
     gfx.swapchain_des.presentMode = present_mode;
     gfx.swapchain = gfx.wb.deviceCreateSwapChain(gfx.device, gfx.surface, &gfx.swapchain_des);
+
+    gfx.wb.textureViewDrop(gfx.depth_stencil.view);
+    gfx.wb.textureDrop(gfx.depth_stencil.texture);
+    gfx.createDepthStencil();
 }
 
 pub fn createBufferFromData(gfx: Gfx, data: anytype, usage: Wgpu.BufferUsage, size: usize) Wgpu.Buffer {
