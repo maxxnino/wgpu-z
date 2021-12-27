@@ -81,11 +81,24 @@ const Vertex = struct {
     };
 };
 
-const UniformBufferObject = packed struct {
+const UniformBufferObject = struct {
     projection: Mat4,
     model: Mat4,
     view: Mat4,
     cam_pos: z.Vec3,
+    padding: f32 = 0,
+};
+
+const DynamicMaterial = struct {
+    roughness: f32 = 0,
+    metalic: f32 = 0,
+    color: Vec3 = Vec3.zero(),
+    padding: [alignment - 5 * @sizeOf(f32)]u8,
+};
+
+const DynamicPos = struct {
+    position: Vec3 = Vec3.zero(),
+    padding: [alignment - @sizeOf(Vec3)]u8,
 };
 
 const Light = packed struct {
@@ -242,15 +255,69 @@ pub fn createPipeline(gfx: Gfx, bind_group_layouts: *const Wgpu.BindGroupLayout)
         },
     });
 }
-const DynamicMaterial = struct {
-    roughness: f32 = 0,
-    metalic: f32 = 0,
-    color: Vec3 = Vec3.zero(),
-    padding: [236]u8,
-};
-const DynamicPos = struct {
-    position: Vec3 = Vec3.zero(),
-    padding: [244]u8,
+
+const UboDynamic = struct {
+    const M = [cells]DynamicMaterial;
+    const P = [cells]DynamicPos;
+    const materials_size = @sizeOf(DynamicMaterial) * cells;
+    const object_size = @sizeOf(DynamicPos) * cells;
+
+    material_params_dynamic: M,
+    object_params_dynamic: P,
+    click: bool,
+
+    pub fn new() UboDynamic {
+        return .{
+            .material_params_dynamic = std.mem.zeroes(M),
+            .object_params_dynamic = std.mem.zeroes(P),
+            .click = true,
+        };
+    }
+    pub fn updatePos(self: *UboDynamic, gfx: Gfx, buffer: Wgpu.Buffer) void {
+        var y: u32 = 0;
+        var i: u32 = 0;
+        while (y < grid_dim) : (y += 1) {
+            var x: u32 = 0;
+            while (x < grid_dim) : (x += 1) {
+                self.object_params_dynamic[i].position = z.Vec3.new(
+                    (@intToFloat(f32, x) - 2) * 8,
+                    0,
+                    (@intToFloat(f32, y) - 2) * 8,
+                );
+
+                i += 1;
+            }
+        }
+        gfx.queueWriteBuffer(buffer, 0, &self.object_params_dynamic, object_size);
+    }
+
+    pub fn update(self: *UboDynamic, window: glfw.Window) bool {
+        if (!self.click and window.getKey(.n) == .press) {
+            self.click = true;
+            return true;
+        }
+
+        if (self.click and window.getKey(.n) == .release) self.click = false;
+        return false;
+    }
+
+    pub fn updateMat(self: *UboDynamic, gfx: Gfx, buffer: Wgpu.Buffer, current_material: u32) void {
+        var y: u32 = 0;
+        var i: u32 = 0;
+        const grid_size: f32 = @intToFloat(f32, grid_dim);
+        while (y < grid_dim) : (y += 1) {
+            var x: u32 = 0;
+            while (x < grid_dim) : (x += 1) {
+                self.material_params_dynamic[i].roughness =
+                    std.math.clamp(@intToFloat(f32, x) / (grid_size - 1), 0.1, 1);
+                self.material_params_dynamic[i].metalic =
+                    std.math.clamp(@intToFloat(f32, x) / (grid_size - 1), 0.05, 1);
+                self.material_params_dynamic[i].color = materials[current_material].color;
+                i += 1;
+            }
+        }
+        gfx.queueWriteBuffer(buffer, 0, &self.material_params_dynamic, materials_size);
+    }
 };
 
 pub fn main() anyerror!void {
@@ -325,42 +392,12 @@ pub fn main() anyerror!void {
     gfx.queueWriteBuffer(light_buffer, 0, &lights, lights_size);
 
     //Material and object position
-    var material_params_dynamic: [cells]DynamicMaterial = undefined;
-    material_params_dynamic = std.mem.zeroes(@TypeOf(material_params_dynamic));
-
-    var object_params_dynamic: [cells]DynamicPos = undefined;
-    object_params_dynamic = std.mem.zeroes(@TypeOf(object_params_dynamic));
-
-    const materials_size = calcConstantBufferByteSize(@sizeOf(DynamicMaterial) * cells);
-    const materials_buffer = gfx.createUniformBuffer(.{}, materials_size, "mat");
-    const object_size = calcConstantBufferByteSize(@sizeOf(DynamicPos) * cells);
-    const object_buffer = gfx.createUniformBuffer(.{}, object_size, "obj_pos");
-    var current_material: u32 = 1;
-    {
-        var x: u32 = 0;
-        var y: u32 = 0;
-        var i: u32 = 0;
-        const grid_size: f32 = @intToFloat(f32, grid_dim);
-        while (y < grid_dim) : (y += 1) {
-            while (x < grid_dim) : (x += 1) {
-                // Set object position
-                object_params_dynamic[i].position = z.Vec3.new(
-                    (@intToFloat(f32, x) - (grid_size / 2)) * 2.5,
-                    0,
-                    (@intToFloat(f32, y) - (grid_size / 2)) * 2.5,
-                );
-
-                // Set material metallic and roughness properties
-                material_params_dynamic[i].roughness =
-                    std.math.clamp(@intToFloat(f32, x) / (grid_size - 1), 0.1, 1);
-                material_params_dynamic[i].metalic =
-                    std.math.clamp(@intToFloat(f32, x) / (grid_size - 1), 0.05, 1);
-                material_params_dynamic[i].color = materials[current_material].color;
-            }
-        }
-    }
-    gfx.queueWriteBuffer(materials_buffer, 0, &material_params_dynamic, materials_size);
-    gfx.queueWriteBuffer(object_buffer, 0, &object_params_dynamic, object_size);
+    var ubo = UboDynamic.new();
+    const object_buffer = gfx.createUniformBuffer(.{}, UboDynamic.object_size, "obj_pos");
+    const materials_buffer = gfx.createUniformBuffer(.{}, UboDynamic.materials_size, "mat");
+    ubo.updatePos(gfx, object_buffer);
+    var current_material: u32 = 0;
+    ubo.updateMat(gfx, materials_buffer, current_material);
 
     const bgl_entries = [4]Wgpu.BindGroupLayoutEntry{
         .{
@@ -473,10 +510,16 @@ pub fn main() anyerror!void {
 
     //Timer
     var update_timer = try std.time.Timer.start();
+    var total: f32 = 0;
 
     while (!window.shouldClose()) {
         const dt = @intToFloat(f32, update_timer.lap()) / @intToFloat(f32, std.time.ns_per_s);
+        total += dt;
         camera.moveCamera(window, dt);
+        if (ubo.update(window)) {
+            current_material = (current_material + 1) % @truncate(u32, materials.len);
+            ubo.updateMat(gfx, materials_buffer, current_material);
+        }
         camera_ubo = UniformBufferObject{
             .projection = camera.getProjMatrix(width, height),
             .view = camera.getViewMatrix(),
@@ -493,7 +536,7 @@ pub fn main() anyerror!void {
 
         width = gfx.swapchain_des.width;
         height = gfx.swapchain_des.height;
-        lights.update(dt);
+        lights.update(total);
         gfx.queueWriteBuffer(light_buffer, 0, &lights, lights_size);
         try gfx.beginFrame();
         gfx.bindPipeline(pipeline);
@@ -531,7 +574,7 @@ pub fn main() anyerror!void {
 }
 
 fn calcConstantBufferByteSize(byte_size: usize) usize {
-    return (byte_size + 255) & ~@as(usize, 255);
+    return (byte_size + alignment) & ~@as(usize, alignment);
 }
 
 pub fn appendGltfModel(

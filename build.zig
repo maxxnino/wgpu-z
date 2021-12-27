@@ -16,8 +16,13 @@ pub fn build(b: *std.build.Builder) void {
 
     exe.addPackagePath("glfw", "libs/mach-glfw/src/main.zig");
     exe.addIncludeDir("libs");
-    // exe.linkSystemLibrary("kernel32");
     glfw.link(b, exe, .{});
+
+    const zalg_pkg = std.build.Pkg{ .name = "zalgebra", .path = .{ .path = "libs/zalgebra/src/main.zig" } };
+    exe.addPackage(zalg_pkg);
+    exe.addIncludeDir("libs");
+    exe.addCSourceFile("libs/cgltf.c", &.{"-std=c99"});
+
 
     exe.setTarget(target);
     exe.setBuildMode(mode);
