@@ -22,6 +22,7 @@ pub fn build(b: *std.build.Builder) void {
     exe.addPackage(zalg_pkg);
     exe.addIncludeDir("libs");
     exe.addCSourceFile("libs/cgltf.c", &.{"-std=c99"});
+    exe.addCSourceFile("libs/stb_image.c", &.{"-std=c99"});
 
 
     exe.setTarget(target);
