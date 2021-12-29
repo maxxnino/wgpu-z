@@ -170,7 +170,7 @@ const Camera = struct {
     quat: z.Quat = z.Quat.zero(),
     z_near: f32 = 0.1,
     z_far: f32 = 100,
-    fov_in_degrees: f32 = 60,
+    fov_in_degrees: f32 = 45,
     const rotate_speed: f32 = 85;
     const move_speed: f32 = 12;
 
